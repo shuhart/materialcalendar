@@ -25,6 +25,10 @@ import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.prolificinteractive.materialcalendarview.draw.DayDrawDataProvider
+import com.prolificinteractive.materialcalendarview.draw.DayDrawDelegate
+import com.prolificinteractive.materialcalendarview.draw.DefaultDayDrawDataProvider
+import com.prolificinteractive.materialcalendarview.draw.DefaultDayDrawDelegate
 import com.prolificinteractive.materialcalendarview.format.*
 import java.util.*
 
@@ -95,7 +99,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
      * This means months that only need 5 or 4 rows to show the entire month will only take up
      * that many rows, and will grow and shrink as necessary.
      *
-     * @param useDynamicHeight true to have the view different heights based on the visible month
+     * true to have the view different heights based on the visible month
      */
     var isDynamicHeightEnabled: Boolean = false
 
@@ -132,7 +136,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
                 }
             }
             field = color
-            adapter!!.setSelectionColor(color)
+            dayDrawDelegate.setSelectionColor(color)
             invalidate()
         }
     var selectionRangeColor = 0
@@ -146,13 +150,25 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
                 }
             }
             field = color
-            adapter!!.setSelectionRangeColor(color)
+            dayDrawDelegate.setSelectionRangeColor(color)
             invalidate()
         }
     var bottomTopDayPadding = 0
         set(value) {
             field = value
             adapter!!.setBottomTopDayPadding(value)
+            invalidate()
+        }
+    var dayDrawDelegate: DayDrawDelegate = DefaultDayDrawDelegate(this)
+        set(value) {
+            field = value
+            adapter!!.setDayDrawDelegate(value)
+            invalidate()
+        }
+    var dayDrawDataProvider: DayDrawDataProvider = DefaultDayDrawDataProvider()
+        set(value) {
+            field = value
+            adapter!!.setDayDrawDataProvider(dayDrawDataProvider)
             invalidate()
         }
     var arrowColor = Color.BLACK
@@ -422,7 +438,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
         if (isInEditMode) {
             removeView(pager)
             val monthView = MonthView(this, currentMonth!!, firstDayOfWeek)
-            monthView.setSelectionColor(selectionColor)
+            dayDrawDelegate.setSelectionColor(selectionColor)
             monthView.setDateTextAppearance(adapter!!.dateTextAppearance)
             monthView.setWeekDayTextAppearance(adapter!!.weekDayTextAppearance)
             monthView.showOtherDates = showOtherDates

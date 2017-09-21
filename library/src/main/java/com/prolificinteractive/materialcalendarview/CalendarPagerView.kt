@@ -5,28 +5,29 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
-import com.prolificinteractive.materialcalendarview.draw.DrawDelegate
+import com.prolificinteractive.materialcalendarview.draw.DayDrawDataProvider
+import com.prolificinteractive.materialcalendarview.draw.DayDrawDelegate
+import com.prolificinteractive.materialcalendarview.draw.DefaultDayDrawDataProvider
 import com.prolificinteractive.materialcalendarview.format.DayFormatter
 import com.prolificinteractive.materialcalendarview.format.WeekDayFormatter
 import java.util.*
 import java.util.Calendar.DATE
 
 abstract class CalendarPagerView(private val mcv: MaterialCalendarView,
-                                          val firstViewDay: CalendarDay,
-                                          protected val firstDayOfWeek: Int) : ViewGroup(mcv.context), View.OnClickListener {
-    private val weekDayViews = ArrayList<WeekDayView>()
+                                 val firstViewDay: CalendarDay,
+                                 protected val firstDayOfWeek: Int) : ViewGroup(mcv.context), View.OnClickListener {
     var showOtherDates = MaterialCalendarView.SHOW_DEFAULTS
         set(value) {
             field = value
             updateUi()
         }
+    private val weekDayViews = ArrayList<WeekDayView>()
     private var minDate: CalendarDay? = null
     private var maxDate: CalendarDay? = null
 
     private val dayViews = ArrayList<DayView>()
 
     init {
-
         clipChildren = false
         clipToPadding = false
 
@@ -45,7 +46,9 @@ abstract class CalendarPagerView(private val mcv: MaterialCalendarView,
 
     protected fun addDayView(dayViews: MutableCollection<DayView>, calendar: Calendar) {
         val day = CalendarDay.from(calendar) ?: return
-        val dayView = DayView(context, day, DrawDelegate(mcv))
+        val dayView = DayView(context, day,
+                mcv.dayDrawDelegate,
+                DefaultDayDrawDataProvider())
         dayView.setOnClickListener(this)
         dayViews.add(dayView)
         addView(dayView, LayoutParams())
@@ -55,7 +58,6 @@ abstract class CalendarPagerView(private val mcv: MaterialCalendarView,
 
     protected fun resetAndGetWorkingCalendar(): Calendar {
         firstViewDay.copyTo(tempWorkingCalendar)
-
         tempWorkingCalendar.firstDayOfWeek = firstDayOfWeek
         val dow = CalendarUtils.getDayOfWeek(tempWorkingCalendar)
         var delta = firstDayOfWeek - dow
@@ -88,12 +90,6 @@ abstract class CalendarPagerView(private val mcv: MaterialCalendarView,
         for (dayView in dayViews) {
             dayView.setOnClickListener(if (selectionEnabled) this else null)
             dayView.isClickable = selectionEnabled
-        }
-    }
-
-    fun setSelectionColor(color: Int) {
-        for (dayView in dayViews) {
-            dayView.setSelectionColor(color)
         }
     }
 
@@ -231,6 +227,24 @@ abstract class CalendarPagerView(private val mcv: MaterialCalendarView,
         info.className = CalendarPagerView::class.java.name
     }
 
+    fun setBottomTopDayPadding(padding: Int) {
+        for (dayView in dayViews) {
+            dayView.setBottomTopDayPadding(padding)
+        }
+    }
+
+    fun setDayDrawDelegate(dayDrawDelegate: DayDrawDelegate) {
+        for (dayView in dayViews) {
+            dayView.drawDelegate = dayDrawDelegate
+        }
+    }
+
+    fun setDayDrawDataProvider(dayDrawDataProvider: DayDrawDataProvider) {
+        for (dayView in dayViews) {
+            dayView.drawDataProvider = dayDrawDataProvider.copy()
+        }
+    }
+
     /**
      * Simple layout params class for MonthView, since every child is the same size
      */
@@ -244,17 +258,6 @@ abstract class CalendarPagerView(private val mcv: MaterialCalendarView,
         @JvmStatic
         protected val DAY_NAMES_ROW = 1
         private val tempWorkingCalendar = CalendarUtils.instance
-    }
 
-    fun setSelectionRangeColor(color: Int) {
-        for (dayView in dayViews) {
-            dayView.setSelectionRangeColor(color)
-        }
-    }
-
-    fun setBottomTopDayPadding(padding: Int) {
-        for (dayView in dayViews) {
-            dayView.setBottomTopDayPadding(padding)
-        }
     }
 }

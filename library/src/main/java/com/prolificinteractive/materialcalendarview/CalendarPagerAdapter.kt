@@ -3,15 +3,13 @@ package com.prolificinteractive.materialcalendarview
 import android.support.v4.view.PagerAdapter
 import android.view.View
 import android.view.ViewGroup
-
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView.ShowOtherDates
+import com.prolificinteractive.materialcalendarview.draw.DayDrawDataProvider
+import com.prolificinteractive.materialcalendarview.draw.DayDrawDelegate
 import com.prolificinteractive.materialcalendarview.format.DayFormatter
 import com.prolificinteractive.materialcalendarview.format.TitleFormatter
 import com.prolificinteractive.materialcalendarview.format.WeekDayFormatter
-
-import java.util.ArrayDeque
-import java.util.ArrayList
-import java.util.Collections
+import java.util.*
 
 /**
  * Pager adapter backing the calendar view
@@ -22,9 +20,9 @@ abstract class CalendarPagerAdapter<V : CalendarPagerView>(protected val mcv: Ma
     private val today: CalendarDay = CalendarDay.today()
 
     private var titleFormatter: TitleFormatter? = null
-    private var color: Int? = null
-    private var selectionRangeColor: Int? = null
     private var bottomTopDayPadding: Int? = null
+    private var dayDrawDelegate: DayDrawDelegate? = null
+    private var dayDrawDataProvider: DayDrawDataProvider? = null
     var dateTextAppearance: Int = 0
         set(taId) {
             if (taId == 0) {
@@ -70,7 +68,6 @@ abstract class CalendarPagerAdapter<V : CalendarPagerView>(protected val mcv: Ma
 
     fun migrateStateAndReturn(newAdapter: CalendarPagerAdapter<*>): CalendarPagerAdapter<*> {
         newAdapter.titleFormatter = titleFormatter
-        newAdapter.color = color
         newAdapter.dateTextAppearance = dateTextAppearance
         newAdapter.weekDayTextAppearance = weekDayTextAppearance
         newAdapter.showOtherDates = showOtherDates
@@ -126,12 +123,6 @@ abstract class CalendarPagerAdapter<V : CalendarPagerView>(protected val mcv: Ma
 
         pagerView.setWeekDayFormatter(weekDayFormatter)
         pagerView.setDayFormatter(dayFormatter)
-        if (color != null) {
-            pagerView.setSelectionColor(color!!)
-        }
-        if (selectionRangeColor != null) {
-            pagerView.setSelectionRangeColor(selectionRangeColor!!)
-        }
         if (bottomTopDayPadding != null) {
             pagerView.setBottomTopDayPadding(bottomTopDayPadding!!)
         }
@@ -168,20 +159,6 @@ abstract class CalendarPagerAdapter<V : CalendarPagerView>(protected val mcv: Ma
 
     fun setTitleFormatter(titleFormatter: TitleFormatter) {
         this.titleFormatter = titleFormatter
-    }
-
-    fun setSelectionColor(color: Int) {
-        this.color = color
-        for (pagerView in currentViews) {
-            pagerView.setSelectionColor(color)
-        }
-    }
-
-    fun setSelectionRangeColor(color: Int) {
-        this.selectionRangeColor = color
-        for (pagerView in currentViews) {
-            pagerView.setSelectionRangeColor(color)
-        }
     }
 
     fun setShowOtherDates(@ShowOtherDates showFlags: Int) {
@@ -281,6 +258,20 @@ abstract class CalendarPagerAdapter<V : CalendarPagerView>(protected val mcv: Ma
         bottomTopDayPadding = padding
         for (pagerView in currentViews) {
             pagerView.setBottomTopDayPadding(padding)
+        }
+    }
+
+    fun setDayDrawDelegate(dayDrawDelegate: DayDrawDelegate) {
+        this.dayDrawDelegate = dayDrawDelegate
+        for (pagerView in currentViews) {
+            pagerView.setDayDrawDelegate(dayDrawDelegate)
+        }
+    }
+
+    fun setDayDrawDataProvider(dayDrawDataProvider: DayDrawDataProvider) {
+        this.dayDrawDataProvider = dayDrawDataProvider
+        for (pagerView in currentViews) {
+            pagerView.setDayDrawDataProvider(dayDrawDataProvider)
         }
     }
 }

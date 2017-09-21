@@ -11,7 +11,8 @@ import android.view.Gravity
 import android.view.View
 import android.widget.CheckedTextView
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView.ShowOtherDates
-import com.prolificinteractive.materialcalendarview.draw.DrawDelegate
+import com.prolificinteractive.materialcalendarview.draw.DayDrawDataProvider
+import com.prolificinteractive.materialcalendarview.draw.DayDrawDelegate
 import com.prolificinteractive.materialcalendarview.format.DayFormatter
 
 /**
@@ -19,21 +20,14 @@ import com.prolificinteractive.materialcalendarview.format.DayFormatter
  */
 @SuppressLint("ViewConstructor")
 class DayView(context: Context, day: CalendarDay,
-              val drawDelegate: DrawDelegate) : CheckedTextView(context) {
-
-    init {
-        drawDelegate.dayView = this
-    }
+              var drawDelegate: DayDrawDelegate,
+              var drawDataProvider: DayDrawDataProvider) : CheckedTextView(context) {
 
     var date: CalendarDay? = null
         private set
-
-
     private var formatter = DayFormatter.DEFAULT
-
     private var isInRange = true
     private var isInMonth = true
-    private var isDecoratedDisabled = false
     @ShowOtherDates
     private var showOtherDates = MaterialCalendarView.SHOW_DEFAULTS
 
@@ -94,10 +88,6 @@ class DayView(context: Context, day: CalendarDay,
             shouldBeVisible = shouldBeVisible or isInMonth
         }
 
-        if (isDecoratedDisabled && showDecoratedDisabled) {
-            shouldBeVisible = shouldBeVisible or (isInMonth && isInRange)
-        }
-
         if (!isInMonth && shouldBeVisible) {
             setTextColor(textColors.getColorForState(
                     intArrayOf(-android.R.attr.state_enabled), Color.GRAY))
@@ -113,24 +103,16 @@ class DayView(context: Context, day: CalendarDay,
     }
 
     override fun onDraw(canvas: Canvas) {
-        drawDelegate.onDraw(canvas)
+        drawDelegate.onDraw(canvas, drawDataProvider.getDayDrawData(), this)
         super.onDraw(canvas)
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
-        drawDelegate.calculateBounds(right - left, bottom - top)
-    }
-
-    fun setSelectionColor(color: Int) {
-        drawDelegate.setSelectionColor(color)
-    }
-
-    fun setSelectionRangeColor(color: Int) {
-        drawDelegate.setSelectionRangeColor(color)
+        drawDataProvider.calculateBounds(right - left, bottom - top)
     }
 
     fun setBottomTopDayPadding(padding: Int) {
-        drawDelegate.setBottomTopDayPadding(padding)
+        drawDataProvider.setBottomTopDayPadding(padding)
     }
 }
