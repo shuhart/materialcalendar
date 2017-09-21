@@ -1,0 +1,37 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        applicationId "com.prolificinteractive.materialcalendarview.sample"
+
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+
+        versionCode 1
+        versionName "1.0"
+
+        multiDexEnabled true
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    // You should use the commented out line below in you're application.
+    // We depend on the source directly here so that development is easier.
+    compile project(':library')
+    //compile 'com.prolificinteractive:material-calendarview:1.4.3'
+
+    compile rootProject.ext.supportAppCompat
+    compile rootProject.ext.recyclerviewV7
+    compile rootProject.ext.butterknife
+    compile 'com.android.support:multidex:1.0.1'
+    annotationProcessor rootProject.ext.butterknifeCompiler
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+}
