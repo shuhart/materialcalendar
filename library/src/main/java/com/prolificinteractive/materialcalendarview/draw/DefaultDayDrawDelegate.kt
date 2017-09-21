@@ -20,25 +20,34 @@ class DefaultDayDrawDelegate(private val mcv: MaterialCalendarView) : DayDrawDel
     override fun onDraw(canvas: Canvas, dayDrawData: DayDrawData, dayView: DayView) {
         dayDrawData.apply {
             val selectedDays = mcv.selectedDates
-            if (selectedDays.isEmpty()) return
+            if (selectedDays.isEmpty()) {
+                dayView.isChecked = false
+                return
+            }
             if (selectedDays.first() == dayView.date) {
-                if (selectedDays.size > 1) {
+                if (selectedDays.size > 1 && !CalendarUtils.isLastDayOfMonth(dayView.date!!)) {
                     canvas.drawRect(firstRect, rangePaint)
                 }
                 canvas.drawCircle(cx, cy, radius, circlePaint)
                 dayView.isChecked = true
             } else if (selectedDays.size > 1 && selectedDays.last() == dayView.date) {
-                canvas.drawRect(lastRect, rangePaint)
+                if (!CalendarUtils.isIFirstDayOfMonth(dayView.date!!)) {
+                    canvas.drawRect(lastRect, rangePaint)
+                }
                 canvas.drawCircle(cx, cy, radius, circlePaint)
                 dayView.isChecked = true
             } else if (selectedDays.contains(dayView.date)) {
                 when {
                     CalendarUtils.isFirstDayOfWeek(dayView.date!!) -> {
-                        canvas.drawRect(firstRect, rangePaint)
+                        if (!CalendarUtils.isLastDayOfMonth(dayView.date!!)) {
+                            canvas.drawRect(firstRect, rangePaint)
+                        }
                         canvas.drawCircle(cx, cy, radius, rangePaint)
                     }
                     CalendarUtils.isLastDayOfWeek(dayView.date!!) -> {
-                        canvas.drawRect(lastRect, rangePaint)
+                        if (!CalendarUtils.isIFirstDayOfMonth(dayView.date!!)) {
+                            canvas.drawRect(lastRect, rangePaint)
+                        }
                         canvas.drawCircle(cx, cy, radius, rangePaint)
                     }
                     else -> canvas.drawRect(rangeRect, rangePaint)

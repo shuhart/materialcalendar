@@ -1,12 +1,7 @@
 package com.prolificinteractive.materialcalendarview
 
-import java.util.Calendar
-import java.util.Date
-
-import java.util.Calendar.DATE
-import java.util.Calendar.DAY_OF_WEEK
-import java.util.Calendar.MONTH
-import java.util.Calendar.YEAR
+import java.util.*
+import java.util.Calendar.*
 
 /**
  * Utilities for Calendar
@@ -82,4 +77,10 @@ object CalendarUtils {
                 }
         return getDayOfWeek(date.calendar) == lastDayOfWeek
     }
+
+    fun isLastDayOfMonth(date: CalendarDay): Boolean =
+            date.calendar.get(Calendar.DAY_OF_MONTH) == date.calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+
+    fun isIFirstDayOfMonth(date: CalendarDay): Boolean =
+            date.calendar.get(Calendar.DAY_OF_MONTH) == 1
 }
