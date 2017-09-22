@@ -1,5 +1,6 @@
-package com.prolificinteractive.materialcalendarview
+package com.prolificinteractive.materialcalendarview.utils
 
+import com.prolificinteractive.materialcalendarview.CalendarDay
 import java.util.*
 import java.util.Calendar.*
 

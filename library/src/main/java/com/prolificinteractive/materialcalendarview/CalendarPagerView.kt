@@ -10,6 +10,7 @@ import com.prolificinteractive.materialcalendarview.draw.DayDrawDelegate
 import com.prolificinteractive.materialcalendarview.draw.DefaultDayDrawDataProvider
 import com.prolificinteractive.materialcalendarview.format.DayFormatter
 import com.prolificinteractive.materialcalendarview.format.WeekDayFormatter
+import com.prolificinteractive.materialcalendarview.utils.CalendarUtils
 import java.util.*
 import java.util.Calendar.DATE
 

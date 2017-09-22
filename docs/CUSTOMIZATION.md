@@ -87,12 +87,12 @@ If you want more control than just color, you can use the [decorator api](DECORA
 
 ### Visibility
 
-You can hide or show the topbar (arrow buttons and month label) by calling `setTopbarVisible(boolean)`
+You can hide or show the month indicator view (arrow buttons and month label) by calling `setMonthIndicatorVisible(boolean)`
 The default is visible.
 
 ### Arrow Color
 
-You can change the topbar arrow colors by setting `mcv_arrowColor` in xml, or calling `setArrowColor(int)`.
+You can change the month indicator view arrow colors by setting `mcv_arrowColor` in xml, or calling `setArrowColor(int)`.
 This will color the left and right arrow masks using a color filter.
 
 ### Arrow Masks
@@ -137,7 +137,7 @@ There are three different text appearances you can set:
 * Weekday: `mcv_weekDayTextAppearance` or `setWeekDayTextAppearance()`
 * Date: `mcv_dateTextAppearance` or `setDateTextAppearance()`
 
-The header text appearance is used for the topbar month label.
+The header text appearance is used for the month indicator view month label.
 The weekday is for the row of weekday labels, and date is for the individual days.
 
 For date text appearance, make sure you respond to presses and states. [Read more here](CUSTOM_SELECTORS.md).

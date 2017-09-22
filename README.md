@@ -81,7 +81,7 @@ One of the aims of this library is to be customizable. The many options include:
 * [Showing dates from other months or those out of range](docs/CUSTOMIZATION.md#showing-other-dates)
 * [Setting the first day of the week](docs/CUSTOMIZATION_BUILDER.md#first-day-of-the-week)
 * [Show only a range of dates](docs/CUSTOMIZATION_BUILDER.md#date-ranges)
-* [Customize the top bar](docs/CUSTOMIZATION.md#topbar-options)
+* [Customize the top bar](docs/CUSTOMIZATION.md#monthIndicatorView-options)
 * [Custom labels for the header, weekdays, or individual days](docs/CUSTOMIZATION.md#custom-labels)
 
 

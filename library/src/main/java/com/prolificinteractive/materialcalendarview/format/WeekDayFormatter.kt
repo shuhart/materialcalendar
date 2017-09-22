@@ -1,6 +1,6 @@
 package com.prolificinteractive.materialcalendarview.format
 
-import com.prolificinteractive.materialcalendarview.CalendarUtils
+import com.prolificinteractive.materialcalendarview.utils.CalendarUtils
 
 /**
  * Supply labels for a given day of the week

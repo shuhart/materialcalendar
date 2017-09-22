@@ -5,7 +5,6 @@ package com.prolificinteractive.materialcalendarview
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
@@ -15,21 +14,18 @@ import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.util.SparseArray
 import android.util.TypedValue
-import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import com.prolificinteractive.materialcalendarview.draw.DayDrawDataProvider
 import com.prolificinteractive.materialcalendarview.draw.DayDrawDelegate
 import com.prolificinteractive.materialcalendarview.draw.DefaultDayDrawDataProvider
 import com.prolificinteractive.materialcalendarview.draw.DefaultDayDrawDelegate
 import com.prolificinteractive.materialcalendarview.format.*
+import com.prolificinteractive.materialcalendarview.indicator.MonthIndicator
+import com.prolificinteractive.materialcalendarview.indicator.basic.DefaultMonthIndicator
 import java.util.*
 
 /**
@@ -81,15 +77,11 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
     @IntDef(flag = true, value = *longArrayOf(SHOW_NONE.toLong(), SHOW_ALL.toLong(), SHOW_DEFAULTS.toLong(), SHOW_OUT_OF_RANGE.toLong(), SHOW_OTHER_MONTHS.toLong(), SHOW_DECORATED_DISABLED.toLong()))
     annotation class ShowOtherDates
 
-    private val titleChanger: TitleChanger
 
-    private val title: TextView
-    private val buttonPast: DirectionButton
-    private val buttonFuture: DirectionButton
-    private val pager: CalendarPager?
+    private val pager: CalendarPager
     private var adapter: CalendarPagerAdapter<*>? = null
     private var currentMonth: CalendarDay? = null
-    private var topbar: LinearLayout? = null
+    private val monthIndicatorView: View
     private var calendarMode: CalendarMode? = null
     /**
      * By default, the calendar will take up all the space needed to show any month (6 rows).
@@ -151,6 +143,11 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
             dayDrawDelegate.setSelectionRangeColor(color)
             invalidate()
         }
+    var monthIndicator: MonthIndicator = DefaultMonthIndicator(context)
+        set(value) {
+            field = monthIndicator
+            invalidate()
+        }
     var bottomTopDayPadding = 0
         set(value) {
             field = value
@@ -169,32 +166,12 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
             adapter!!.setDayDrawDataProvider(dayDrawDataProvider)
             invalidate()
         }
-    var arrowColor = Color.BLACK
-        set(color) {
-            if (color == 0) {
-                return
-            }
-            field = color
-            buttonPast.setColor(color)
-            buttonFuture.setColor(color)
-            invalidate()
-        }
-    var leftArrowMask: Drawable? = null
-        set(icon) {
-            field = icon
-            buttonPast.setImageDrawable(icon)
-        }
-    var rightArrowMask: Drawable? = null
-        set(icon) {
-            field = icon
-            buttonFuture.setImageDrawable(icon)
-        }
     private var tileHeight = INVALID_TILE_DIMENSION
     private var tileWidth = INVALID_TILE_DIMENSION
     var selectionMode = SELECTION_MODE_SINGLE
         @SuppressLint("SwitchIntDef")
         set(@SelectionMode mode) {
-            @SelectionMode val oldMode = this.selectionMode
+            @SelectionMode val oldMode: Int = this.selectionMode
             field = mode
             when (mode) {
                 SELECTION_MODE_RANGE -> clearSelection()
@@ -227,12 +204,11 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
     /**
      * Set the size of each tile that makes up the calendar.
      * Each day is 1 tile, so the widget is 7 tiles wide and 7 or 8 tiles tall
-     * depending on the visibility of the [.topbar].
+     * depending on the visibility of the [.monthIndicatorView].
      *
-     * @param size the new size for each tile in pixels
+     *
      */
     var tileSize: Int
-        @Deprecated("")
         get() = Math.max(tileHeight, tileWidth)
         set(size) {
             this.tileWidth = size
@@ -273,33 +249,15 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
             clipToPadding = true
         }
 
-        buttonPast = DirectionButton(getContext())
-        buttonPast.contentDescription = getContext().getString(R.string.previous)
-        title = TextView(getContext())
-        buttonFuture = DirectionButton(getContext())
-        buttonFuture.contentDescription = getContext().getString(R.string.next)
         pager = CalendarPager(getContext())
-
-        val onClickListener = OnClickListener { v ->
-            if (v === buttonFuture) {
-                pager.setCurrentItem(pager.currentItem + 1, true)
-            } else if (v === buttonPast) {
-                pager.setCurrentItem(pager.currentItem - 1, true)
-            }
-        }
-        buttonPast.setOnClickListener(onClickListener)
-        buttonFuture.setOnClickListener(onClickListener)
-
-        titleChanger = TitleChanger(title)
-        titleChanger.titleFormatter = DEFAULT_TITLE_FORMATTER
+        monthIndicatorView = monthIndicator.getView(this, pager)
 
         val pageChangeListener = object : ViewPager.OnPageChangeListener {
             override fun onPageSelected(position: Int) {
                 currentMonth ?: return
-                titleChanger.setPreviousMonth(currentMonth!!)
-                currentMonth = adapter!!.getItem(position)
-                updateUi()
-
+                val next = adapter!!.getItem(position)
+                monthIndicator.onMonthChanged(currentMonth!!, next)
+                currentMonth = next
                 dispatchOnMonthChanged(currentMonth)
             }
 
@@ -326,8 +284,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
                     -1
             )
 
-            titleChanger.orientation = a.getInteger(R.styleable.MaterialCalendarView_mcv_titleAnimationOrientation,
-                    VERTICAL)
+            monthIndicator.applyStyles(a)
 
             if (firstDayOfWeek < 0) {
                 //Allowing use of Calendar.getInstance() here as a performance optimization
@@ -354,25 +311,6 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
                 setTileHeight(tileHeight)
             }
 
-            arrowColor = a.getColor(
-                    R.styleable.MaterialCalendarView_mcv_arrowColor,
-                    Color.BLACK
-            )
-            var leftMask = a.getDrawable(
-                    R.styleable.MaterialCalendarView_mcv_leftArrowMask
-            )
-            if (leftMask == null) {
-                leftMask = resources.getDrawable(R.drawable.mcv_action_previous)
-            }
-            leftArrowMask = leftMask
-            var rightMask = a.getDrawable(
-                    R.styleable.MaterialCalendarView_mcv_rightArrowMask
-            )
-            if (rightMask == null) {
-                rightMask = resources.getDrawable(R.drawable.mcv_action_next)
-            }
-            rightArrowMask = rightMask
-
             selectionColor = a.getColor(
                     R.styleable.MaterialCalendarView_mcv_selectionColor,
                     getThemePrimaryColor(context)
@@ -398,10 +336,6 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
                 setTitleFormatter(MonthArrayTitleFormatter(array))
             }
 
-            setHeaderTextAppearance(a.getResourceId(
-                    R.styleable.MaterialCalendarView_mcv_headerTextAppearance,
-                    R.style.TextAppearance_MaterialCalendarWidget_Header
-            ))
             setWeekDayTextAppearance(a.getResourceId(
                     R.styleable.MaterialCalendarView_mcv_weekDayTextAppearance,
                     R.style.TextAppearance_MaterialCalendarWidget_WeekDay
@@ -420,6 +354,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
                     R.styleable.MaterialCalendarView_mcv_allowClickDaysOutsideCurrentMonth,
                     true
             ))
+            monthIndicator.applyStyles(a)
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
@@ -445,32 +380,10 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
     }
 
     private fun setupChildren() {
-        topbar = LinearLayout(context)
-        topbar!!.orientation = LinearLayout.HORIZONTAL
-        topbar!!.clipChildren = false
-        topbar!!.clipToPadding = false
-        addView(topbar, LayoutParams(1))
-
-        buttonPast.scaleType = ImageView.ScaleType.CENTER_INSIDE
-        topbar!!.addView(buttonPast, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
-
-        title.gravity = Gravity.CENTER
-        topbar!!.addView(title, LinearLayout.LayoutParams(
-                0, ViewGroup.LayoutParams.MATCH_PARENT, (DEFAULT_DAYS_IN_WEEK - 2).toFloat()
-        ))
-
-        buttonFuture.scaleType = ImageView.ScaleType.CENTER_INSIDE
-        topbar!!.addView(buttonFuture, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
-
-        pager!!.id = R.id.mcv_pager
+        addView(monthIndicatorView, LayoutParams(1))
+        pager.id = R.id.mcv_pager
         pager.offscreenPageLimit = 1
         addView(pager, LayoutParams(calendarMode!!.visibleWeeksCount + DAY_NAMES_ROW))
-    }
-
-    private fun updateUi() {
-        titleChanger.change(currentMonth)
-        buttonPast.isEnabled = canGoBack()
-        buttonFuture.isEnabled = canGoForward()
     }
 
     /**
@@ -480,7 +393,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
      */
     fun goToPrevious() {
         if (canGoBack()) {
-            pager!!.setCurrentItem(pager.currentItem - 1, true)
+            pager.setCurrentItem(pager.currentItem - 1, true)
         }
     }
 
@@ -491,7 +404,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
      */
     fun goToNext() {
         if (canGoForward()) {
-            pager!!.setCurrentItem(pager.currentItem + 1, true)
+            pager.setCurrentItem(pager.currentItem + 1, true)
         }
     }
 
@@ -558,7 +471,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
     /**
      * @return true if there is a future month that can be shown
      */
-    fun canGoForward(): Boolean = pager!!.currentItem < adapter!!.count - 1
+    fun canGoForward(): Boolean = pager.currentItem < adapter!!.count - 1
 
     /**
      * Pass all touch events to the pager so scrolling works on the edges of the calendar view.
@@ -566,27 +479,15 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
      * @param event
      * @return
      */
-    override fun onTouchEvent(event: MotionEvent): Boolean = pager!!.dispatchTouchEvent(event)
+    override fun onTouchEvent(event: MotionEvent): Boolean = pager.dispatchTouchEvent(event)
 
     /**
      * @return true if there is a previous month that can be shown
      */
-    fun canGoBack(): Boolean = pager!!.currentItem > 0
-
-    fun setContentDescriptionArrowPast(description: CharSequence) {
-        buttonPast.contentDescription = description
-    }
-
-    fun setContentDescriptionArrowFuture(description: CharSequence) {
-        buttonFuture.contentDescription = description
-    }
+    fun canGoBack(): Boolean = pager.currentItem > 0
 
     fun setContentDescriptionCalendar(description: CharSequence) {
         calendarContentDescription = description
-    }
-
-    fun setHeaderTextAppearance(resourceId: Int) {
-        title.setTextAppearance(context, resourceId)
     }
 
     fun setDateTextAppearance(resourceId: Int) {
@@ -697,7 +598,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
      * @return The current month shown, will be set to first day of the month
      */
     val currentDate: CalendarDay
-        get() = adapter!!.getItem(pager!!.currentItem)
+        get() = adapter!!.getItem(pager.currentItem)
 
     /**
      * @param day             a CalendarDay to focus the calendar on. Null will do nothing
@@ -709,8 +610,9 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
             return
         }
         val index = adapter!!.getIndexForDay(day)
-        pager!!.setCurrentItem(index, useSmoothScroll)
-        updateUi()
+        pager.setCurrentItem(index, useSmoothScroll)
+        currentMonth ?: return
+        monthIndicator.updateUi(currentMonth!!)
     }
 
     /**
@@ -775,19 +677,19 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
     fun allowClickDaysOutsideCurrentMonth(): Boolean = allowClickDaysOutsideCurrentMonth
 
     @Suppress("NAME_SHADOWING")
-            /**
-             * Set a custom formatter for the month/year title
-             *
-             * @param titleFormatter new formatter to use, null to use default formatter
-             */
+    /**
+     * Set a custom formatter for the month/year title
+     *
+     * @param titleFormatter new formatter to use, null to use default formatter
+     */
     fun setTitleFormatter(titleFormatter: TitleFormatter?) {
         var titleFormatter = titleFormatter
         if (titleFormatter == null) {
             titleFormatter = DEFAULT_TITLE_FORMATTER
         }
-        titleChanger.titleFormatter = titleFormatter
+        monthIndicator.setTitleFormatter(titleFormatter)
         adapter!!.setTitleFormatter(titleFormatter)
-        updateUi()
+        monthIndicator.updateUi(currentMonth!!)
     }
 
     /**
@@ -816,21 +718,15 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
         setTitleMonths(resources.getTextArray(arrayRes))
     }
 
-    var titleAnimationOrientation: Int
-        get() = titleChanger.orientation
-        set(orientation) {
-            titleChanger.orientation = orientation
-        }
-
     /**
-     * Sets the visibility [.topbar], which contains
+     * Sets the visibility [.monthIndicatorView], which contains
      * the previous month button [.buttonPast], next month button [.buttonFuture],
      * and the month title [.title].
      */
-    var topbarVisible: Boolean
-        get() = topbar!!.visibility == View.VISIBLE
+    var monthIndicatorVisible: Boolean
+        get() = monthIndicatorView.visibility == View.VISIBLE
         set(visible) {
-            topbar!!.visibility = if (visible) View.VISIBLE else View.GONE
+            monthIndicatorView.visibility = if (visible) View.VISIBLE else View.GONE
             requestLayout()
         }
 
@@ -845,11 +741,10 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
         ss.maxDate = maximumDate
         ss.selectedDates = selectedDates
         ss.firstDayOfWeek = firstDayOfWeek
-        ss.orientation = titleAnimationOrientation
         ss.selectionMode = selectionMode
         ss.tileWidthPx = getTileWidth()
         ss.tileHeightPx = getTileHeight()
-        ss.topbarVisible = topbarVisible
+        ss.topbarVisible = monthIndicatorVisible
         ss.calendarMode = calendarMode
         ss.dynamicHeightEnabled = isDynamicHeightEnabled
         ss.currentMonth = currentMonth
@@ -878,10 +773,9 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
         for (calendarDay in ss.selectedDates) {
             setDateSelected(calendarDay, true)
         }
-        titleAnimationOrientation = ss.orientation
         setTileWidth(ss.tileWidthPx)
         setTileHeight(ss.tileHeightPx)
-        topbarVisible = ss.topbarVisible
+        monthIndicatorVisible = ss.topbarVisible
         selectionMode = ss.selectionMode
         isDynamicHeightEnabled = ss.dynamicHeightEnabled
         setCurrentDate(ss.currentMonth)
@@ -903,8 +797,9 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
             currentMonth = if (min.isAfter(currentMonth!!)) min else currentMonth
         }
         val position = adapter!!.getIndexForDay(c)
-        pager!!.setCurrentItem(position, false)
-        updateUi()
+        pager.setCurrentItem(position, false)
+//        updateUi()
+        // todo check if we really need to call updateUi()
     }
 
     open class SavedState : View.BaseSavedState {
@@ -997,7 +892,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
     }
 
     fun setOnTitleClickListener(listener: View.OnClickListener) {
-        title.setOnClickListener(listener)
+        monthIndicator.setOnTitleClickListener(listener)
     }
 
     protected fun dispatchOnDateSelected(day: CalendarDay, selected: Boolean) {
@@ -1122,7 +1017,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
 
         val weekCount = weekCountBasedOnMode
 
-        val viewTileHeight = if (topbarVisible) weekCount + 1 else weekCount
+        val viewTileHeight = if (monthIndicatorVisible) weekCount + 1 else weekCount
 
         //Calculate independent tile sizes for later
         val desiredTileWidth = desiredWidth / DEFAULT_DAYS_IN_WEEK
@@ -1213,7 +1108,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
         get() {
             var weekCount = calendarMode!!.visibleWeeksCount
             val isInMonthsMode = calendarMode == CalendarMode.MONTHS
-            if (isInMonthsMode && isDynamicHeightEnabled && adapter != null && pager != null) {
+            if (isInMonthsMode && isDynamicHeightEnabled && adapter != null) {
                 val cal = adapter!!.getItem(pager.currentItem).calendar.clone() as Calendar
                 cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH))
                 cal.firstDayOfWeek = firstDayOfWeek
@@ -1270,10 +1165,10 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
     class LayoutParams(tileHeight: Int) : ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, tileHeight)
 
     var isPagingEnabled: Boolean
-        get() = pager!!.isPagingEnabled
+        get() = pager.isPagingEnabled
         set(pagingEnabled) {
-            pager!!.isPagingEnabled = pagingEnabled
-            updateUi()
+            pager.isPagingEnabled = pagingEnabled
+            monthIndicator.updateUi(currentMonth!!)
         }
 
     fun state(): State? = state
@@ -1414,7 +1309,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
         // Use the calendarDayToShow to determine which date to focus on for the case of switching between month and week views
         var calendarDayToShow: CalendarDay? = null
         if (adapter != null && state.cacheCurrentPosition) {
-            calendarDayToShow = adapter!!.getItem(pager!!.currentItem)
+            calendarDayToShow = adapter!!.getItem(pager.currentItem)
             if (calendarMode !== state.calendarMode) {
                 val currentlySelectedDate = selectedDate
                 if (calendarMode === CalendarMode.MONTHS && currentlySelectedDate != null) {
@@ -1460,7 +1355,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
         } else {
             adapter!!.migrateStateAndReturn(newAdapter)
         }
-        pager!!.adapter = adapter
+        pager.adapter = adapter
         setRangeDates(minimumDate, maximumDate)
 
         // Reset height params after mode change
@@ -1476,7 +1371,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
             pager.currentItem = adapter!!.getIndexForDay(calendarDayToShow)
         }
 
-        updateUi()
+        // todo check if we really need to call updateUi()
     }
 
     companion object {
@@ -1554,11 +1449,11 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
          */
         const val DEFAULT_TILE_SIZE_DP = 44
 
-        private val DEFAULT_DAYS_IN_WEEK = 7
+        val DEFAULT_DAYS_IN_WEEK = 7
         private val DEFAULT_MAX_WEEKS = 6
         private val DAY_NAMES_ROW = 1
 
-        private val DEFAULT_TITLE_FORMATTER = DateFormatTitleFormatter()
+        val DEFAULT_TITLE_FORMATTER = DateFormatTitleFormatter()
 
         private fun getThemeAccentColor(context: Context): Int {
             val colorAttr: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

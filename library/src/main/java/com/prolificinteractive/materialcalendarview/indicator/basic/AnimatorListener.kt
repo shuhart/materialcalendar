@@ -1,4 +1,4 @@
-package com.prolificinteractive.materialcalendarview
+package com.prolificinteractive.materialcalendarview.indicator.basic
 
 import android.animation.Animator
 

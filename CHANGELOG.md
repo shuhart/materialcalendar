@@ -83,7 +83,7 @@ Version 1.0.0 *(2015-09-30)*
 Version 0.8.1 *(2015-08-28)*
 ----------------------------
 
-* Fix: Setting the topbar to invisible didn't correctly resize the view
+* Fix: Setting the monthIndicatorView to invisible didn't correctly resize the view
 * Change: Made `DayViewFacade` non final for unit test mocking
 
 Version 0.8.0 *(2015-08-21)*

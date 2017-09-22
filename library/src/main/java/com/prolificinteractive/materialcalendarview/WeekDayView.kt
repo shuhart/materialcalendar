@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.TextView
 
 import com.prolificinteractive.materialcalendarview.format.WeekDayFormatter
+import com.prolificinteractive.materialcalendarview.utils.CalendarUtils
 
 import java.util.Calendar
 

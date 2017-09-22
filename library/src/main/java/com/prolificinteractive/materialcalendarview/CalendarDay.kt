@@ -2,6 +2,7 @@ package com.prolificinteractive.materialcalendarview
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.prolificinteractive.materialcalendarview.utils.CalendarUtils
 
 import java.util.Calendar
 import java.util.Date

@@ -3,7 +3,7 @@ package com.prolificinteractive.materialcalendarview.draw
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import com.prolificinteractive.materialcalendarview.CalendarUtils
+import com.prolificinteractive.materialcalendarview.utils.CalendarUtils
 import com.prolificinteractive.materialcalendarview.DayView
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 

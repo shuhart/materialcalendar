@@ -1,10 +1,12 @@
-package com.prolificinteractive.materialcalendarview
+package com.prolificinteractive.materialcalendarview.indicator.basic
 
 import android.animation.Animator
 import android.text.TextUtils
 import android.util.TypedValue
 import android.view.animation.DecelerateInterpolator
 import android.widget.TextView
+import com.prolificinteractive.materialcalendarview.CalendarDay
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.prolificinteractive.materialcalendarview.format.TitleFormatter
 
 class TitleChanger(private val title: TextView) {
