@@ -749,12 +749,17 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
         ss.dynamicHeightEnabled = isDynamicHeightEnabled
         ss.currentMonth = currentMonth
         ss.cacheCurrentPosition = state!!.cacheCurrentPosition
+        ss.selectionRangeColor = selectionRangeColor
+        ss.bottomTopDayPadding = bottomTopDayPadding
         return ss
     }
 
     override fun onRestoreInstanceState(state: Parcelable) {
         val ss = state as SavedState
         super.onRestoreInstanceState(ss.superState)
+        selectionColor = ss.color
+        selectionRangeColor = ss.selectionRangeColor
+        bottomTopDayPadding = ss.bottomTopDayPadding
         newState().apply {
             firstDayOfWeek = ss.firstDayOfWeek
         }
@@ -764,7 +769,6 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
                 .isCacheCalendarPositionEnabled(ss.cacheCurrentPosition)
                 .commit()
 
-        selectionColor = ss.color
         setDateTextAppearance(ss.dateTextAppearance)
         setWeekDayTextAppearance(ss.weekDayTextAppearance)
         showOtherDates = ss.showOtherDates
@@ -798,8 +802,8 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
         }
         val position = adapter!!.getIndexForDay(c)
         pager.setCurrentItem(position, false)
-//        updateUi()
-        // todo check if we really need to call updateUi()
+        currentMonth ?: return
+        monthIndicator.updateUi(currentMonth!!)
     }
 
     open class SavedState : View.BaseSavedState {
@@ -822,6 +826,8 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
         var calendarMode: CalendarMode? = CalendarMode.MONTHS
         var currentMonth: CalendarDay? = null
         var cacheCurrentPosition: Boolean = false
+        var selectionRangeColor = 0
+        var bottomTopDayPadding = 0
 
         constructor(superState: Parcelable) : super(superState)
 
@@ -845,6 +851,8 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
             out.writeInt(if (calendarMode === CalendarMode.WEEKS) 1 else 0)
             out.writeParcelable(currentMonth, 0)
             out.writeByte((if (cacheCurrentPosition) 1 else 0).toByte())
+            out.writeInt(selectionRangeColor)
+            out.writeInt(bottomTopDayPadding)
         }
 
         private constructor(`in`: Parcel) : super(`in`) {
@@ -867,6 +875,8 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
             calendarMode = if (`in`.readInt() == 1) CalendarMode.WEEKS else CalendarMode.MONTHS
             currentMonth = `in`.readParcelable(loader)
             cacheCurrentPosition = `in`.readByte().toInt() != 0
+            selectionRangeColor = `in`.readInt()
+            bottomTopDayPadding = `in`.readInt()
         }
 
         companion object {
@@ -1355,6 +1365,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
         } else {
             adapter!!.migrateStateAndReturn(newAdapter)
         }
+        adapter!!.setBottomTopDayPadding(bottomTopDayPadding)
         pager.adapter = adapter
         setRangeDates(minimumDate, maximumDate)
 
@@ -1371,7 +1382,8 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
             pager.currentItem = adapter!!.getIndexForDay(calendarDayToShow)
         }
 
-        // todo check if we really need to call updateUi()
+        currentMonth ?: return
+        monthIndicator.updateUi(currentMonth!!)
     }
 
     companion object {
