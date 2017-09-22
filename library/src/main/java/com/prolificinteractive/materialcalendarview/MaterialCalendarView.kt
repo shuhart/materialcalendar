@@ -103,8 +103,6 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
      */
     var isDynamicHeightEnabled: Boolean = false
 
-    private val dayViewDecorators = ArrayList<DayViewDecorator>()
-
     /**
      * @return the minimum selectable date for the calendar, if any
      */
