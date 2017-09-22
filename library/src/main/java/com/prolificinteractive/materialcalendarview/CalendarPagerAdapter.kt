@@ -52,8 +52,6 @@ abstract class CalendarPagerAdapter<V : CalendarPagerView>(protected val mcv: Ma
     private var selectedDates: MutableList<CalendarDay> = ArrayList()
     private var weekDayFormatter = WeekDayFormatter.DEFAULT
     private var dayFormatter = DayFormatter.DEFAULT
-    private var decorators: List<DayViewDecorator> = ArrayList()
-    private var decoratorResults: MutableList<DecoratorResult>? = null
     private var selectionEnabled = true
 
     init {
@@ -76,8 +74,6 @@ abstract class CalendarPagerAdapter<V : CalendarPagerView>(protected val mcv: Ma
         newAdapter.selectedDates = selectedDates
         newAdapter.weekDayFormatter = weekDayFormatter
         newAdapter.dayFormatter = dayFormatter
-        newAdapter.decorators = decorators
-        newAdapter.decoratorResults = decoratorResults
         newAdapter.selectionEnabled = selectionEnabled
         return newAdapter
     }
@@ -107,8 +103,8 @@ abstract class CalendarPagerAdapter<V : CalendarPagerView>(protected val mcv: Ma
         if (!isInstanceOfView(`object`)) {
             return PagerAdapter.POSITION_NONE
         }
-        val pagerView = `object` as CalendarPagerView?
-        pagerView!!.firstViewDay ?: return PagerAdapter.POSITION_NONE
+//        val pagerView = `object` as CalendarPagerView?
+//        pagerView!!.firstViewDay ?: return PagerAdapter.POSITION_NONE
         val index = indexOf(`object` as V)
         return if (index < 0) {
             PagerAdapter.POSITION_NONE
