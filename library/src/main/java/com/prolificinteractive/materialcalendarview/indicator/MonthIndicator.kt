@@ -2,9 +2,7 @@ package com.prolificinteractive.materialcalendarview.indicator
 
 import android.content.res.TypedArray
 import android.view.View
-import com.prolificinteractive.materialcalendarview.CalendarDay
-import com.prolificinteractive.materialcalendarview.CalendarPager
-import com.prolificinteractive.materialcalendarview.MaterialCalendarView
+import com.prolificinteractive.materialcalendarview.*
 import com.prolificinteractive.materialcalendarview.format.TitleFormatter
 
 /**
@@ -18,7 +16,7 @@ interface MonthIndicator {
     fun updateUi(currentMonth: CalendarDay)
 
     fun getView(mcv: MaterialCalendarView,
-                pager: CalendarPager): View
+                pager: CalendarPager, adapter: CalendarPagerAdapter<*>): View
 
     /**
      * @param typedArray do not call recycle() on it.
@@ -28,4 +26,6 @@ interface MonthIndicator {
     fun setTitleFormatter(titleFormatter: TitleFormatter)
 
     fun setOnTitleClickListener(listener: View.OnClickListener)
+
+    fun desiredHeightTileNumber(): Int = 1
 }

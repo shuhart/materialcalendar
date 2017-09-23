@@ -6,6 +6,7 @@ import android.content.res.TypedArray
 import android.view.View
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarPager
+import com.prolificinteractive.materialcalendarview.CalendarPagerAdapter
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.prolificinteractive.materialcalendarview.format.TitleFormatter
 import com.prolificinteractive.materialcalendarview.indicator.MonthIndicator
@@ -35,7 +36,7 @@ class DefaultMonthIndicator(context: Context) : MonthIndicator {
         view.updateUi(currentMonth)
     }
 
-    override fun getView(mcv: MaterialCalendarView, pager: CalendarPager): View {
+    override fun getView(mcv: MaterialCalendarView, pager: CalendarPager, adapter: CalendarPagerAdapter<*>): View {
         view.init(pager, mcv)
         return view
     }

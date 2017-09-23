@@ -188,8 +188,8 @@ abstract class CalendarPagerAdapter<V : CalendarPagerView>(protected val mcv: Ma
         this.minDate = min
         this.maxDate = max
         for (pagerView in currentViews) {
-            pagerView.setMinimumDate(min!!)
-            pagerView.setMaximumDate(max!!)
+            pagerView.setMinimumDate(min)
+            pagerView.setMaximumDate(max)
         }
 
         if (min == null) {

@@ -12,6 +12,7 @@ import android.support.annotation.ArrayRes
 import android.support.annotation.IntDef
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
+import android.util.Log
 import android.util.SparseArray
 import android.util.TypedValue
 import android.view.MotionEvent
@@ -25,7 +26,8 @@ import com.prolificinteractive.materialcalendarview.draw.DefaultDayDrawDataProvi
 import com.prolificinteractive.materialcalendarview.draw.DefaultDayDrawDelegate
 import com.prolificinteractive.materialcalendarview.format.*
 import com.prolificinteractive.materialcalendarview.indicator.MonthIndicator
-import com.prolificinteractive.materialcalendarview.indicator.basic.DefaultMonthIndicator
+import com.prolificinteractive.materialcalendarview.indicator.pager.PagerIndicator
+import com.prolificinteractive.materialcalendarview.utils.DpUtils
 import java.util.*
 
 /**
@@ -143,7 +145,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
             dayDrawDelegate.setSelectionRangeColor(color)
             invalidate()
         }
-    var monthIndicator: MonthIndicator = DefaultMonthIndicator(context)
+    var monthIndicator: MonthIndicator = PagerIndicator(context)
         set(value) {
             field = monthIndicator
             invalidate()
@@ -250,7 +252,6 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
         }
 
         pager = CalendarPager(getContext())
-        monthIndicatorView = monthIndicator.getView(this, pager)
 
         val pageChangeListener = object : ViewPager.OnPageChangeListener {
             override fun onPageSelected(position: Int) {
@@ -263,7 +264,10 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
 
             override fun onPageScrollStateChanged(state: Int) {}
 
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                Log.d("MaterialCalendarView", "position=$position, positionOffset=$positionOffset, positionOffsetPixels=$positionOffsetPixels")
+                
+            }
         }
         pager.addOnPageChangeListener(pageChangeListener)
         pager.setPageTransformer(false) { page, position ->
@@ -271,6 +275,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
             position = Math.sqrt((1 - Math.abs(position)).toDouble()).toFloat()
             page.alpha = position
         }
+        pager.setCurrentItem(0, true)
 
         val a = context.theme
                 .obtainStyledAttributes(attrs, R.styleable.MaterialCalendarView, 0, 0)
@@ -363,6 +368,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
 
         // Adapter is created while parsing the TypedArray attrs, so setup has to happen after
         adapter!!.setTitleFormatter(DEFAULT_TITLE_FORMATTER)
+        monthIndicatorView = monthIndicator.getView(this, pager, adapter!!)
         setupChildren()
 
         currentMonth = CalendarDay.today()
@@ -380,7 +386,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
     }
 
     private fun setupChildren() {
-        addView(monthIndicatorView, LayoutParams(1))
+        addView(monthIndicatorView, LayoutParams(monthIndicator.desiredHeightTileNumber()))
         pager.id = R.id.mcv_pager
         pager.offscreenPageLimit = 1
         addView(pager, LayoutParams(calendarMode!!.visibleWeeksCount + DAY_NAMES_ROW))
@@ -413,7 +419,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
      * @see .setTileSize
      */
     fun setTileSizeDp(tileSizeDp: Int) {
-        tileSize = dpToPx(tileSizeDp)
+        tileSize = DpUtils.dpToPx(context, tileSizeDp)
     }
 
     /**
@@ -436,7 +442,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
      * @see .setTileHeight
      */
     fun setTileHeightDp(tileHeightDp: Int) {
-        setTileHeight(dpToPx(tileHeightDp))
+        setTileHeight(DpUtils.dpToPx(context, tileHeightDp))
     }
 
     /**
@@ -459,13 +465,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
      * @see .setTileWidth
      */
     fun setTileWidthDp(tileWidthDp: Int) {
-        setTileWidth(dpToPx(tileWidthDp))
-    }
-
-    private fun dpToPx(dp: Int): Int {
-        return TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), resources.displayMetrics
-        ).toInt()
+        setTileWidth(DpUtils.dpToPx(context, tileWidthDp))
     }
 
     /**
@@ -1027,7 +1027,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
 
         val weekCount = weekCountBasedOnMode
 
-        val viewTileHeight = if (monthIndicatorVisible) weekCount + 1 else weekCount
+        val viewTileHeight = if (monthIndicatorVisible) weekCount + monthIndicator.desiredHeightTileNumber() else weekCount
 
         //Calculate independent tile sizes for later
         val desiredTileWidth = desiredWidth / DEFAULT_DAYS_IN_WEEK
@@ -1070,11 +1070,11 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
         } else if (measureTileSize <= 0) {
             if (measureTileWidth <= 0) {
                 //Set width to default if no value were set
-                measureTileWidth = dpToPx(DEFAULT_TILE_SIZE_DP)
+                measureTileWidth = DpUtils.dpToPx(context, DEFAULT_TILE_SIZE_DP)
             }
             if (measureTileHeight <= 0) {
                 //Set height to default if no value were set
-                measureTileHeight = dpToPx(DEFAULT_TILE_SIZE_DP)
+                measureTileHeight = DpUtils.dpToPx(context, DEFAULT_TILE_SIZE_DP)
             }
         }
 
