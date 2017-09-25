@@ -2,9 +2,10 @@ package com.prolificinteractive.materialcalendarview.sample
 
 import android.graphics.Color
 import android.os.Build
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
+import android.support.design.widget.CoordinatorLayout
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
@@ -12,6 +13,7 @@ import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener
+import com.prolificinteractive.materialcalendarview.utils.DpUtils
 import java.text.SimpleDateFormat
 
 class BottomSheetActivity : AppCompatActivity(), OnDateSelectedListener, OnMonthChangedListener {
@@ -34,7 +36,10 @@ class BottomSheetActivity : AppCompatActivity(), OnDateSelectedListener, OnMonth
             }
         }
 
-        behavior = BottomSheetBehavior.from(findViewById(R.id.main_content))
+        val content: View = findViewById(R.id.main_content)
+        behavior = CustomBottomSheetBehavior((0.15 * DpUtils.getDisplayHeightInPx(this)).toInt())
+        val lp = content.layoutParams as CoordinatorLayout.LayoutParams
+        lp.behavior = behavior
 
         behavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
@@ -46,14 +51,15 @@ class BottomSheetActivity : AppCompatActivity(), OnDateSelectedListener, OnMonth
                     finish()
                 }
             }
-
         })
 
-        findViewById<View>(R.id.coordinator).setOnClickListener {
-            if (behavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
-                finish()
-            } else behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        }
+        val coordinatorLayout: CoordinatorLayout = findViewById(R.id.coordinator)
+
+//        findViewById<View>(R.id.coordinator).setOnClickListener {
+//            if (behavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
+//                finish()
+//            } else behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+//        }
 
         widget = findViewById(R.id.calendarView)
 

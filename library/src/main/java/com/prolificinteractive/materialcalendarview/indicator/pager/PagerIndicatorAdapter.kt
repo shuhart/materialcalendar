@@ -3,9 +3,7 @@ package com.prolificinteractive.materialcalendarview.indicator.pager
 import android.database.DataSetObserver
 import android.graphics.Color
 import android.support.v4.view.PagerAdapter
-import android.support.v4.view.ViewPager
 import android.text.format.DateUtils
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -94,7 +92,6 @@ class PagerIndicatorAdapter(private val pagerAdapter: CalendarPagerAdapter<*>) :
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
         val view = `object` as FrameLayout
-        Log.d("Adapter", "real width = ${view.getChildAt(0).width}")
         currentViews.remove(view)
         container.removeView(view)
     }

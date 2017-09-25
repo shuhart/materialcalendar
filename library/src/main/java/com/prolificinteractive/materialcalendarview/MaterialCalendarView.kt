@@ -264,10 +264,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
 
             override fun onPageScrollStateChanged(state: Int) {}
 
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                Log.d("MaterialCalendarView", "position=$position, positionOffset=$positionOffset, positionOffsetPixels=$positionOffsetPixels")
-                
-            }
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
         }
         pager.addOnPageChangeListener(pageChangeListener)
         pager.setPageTransformer(false) { page, position ->

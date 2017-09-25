@@ -23,4 +23,12 @@ object DpUtils {
         display.getSize(size)
         return size.x
     }
+
+    fun getDisplayHeightInPx(context: Context): Int {
+        val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val display = wm.defaultDisplay
+        val size = Point()
+        display.getSize(size)
+        return size.y
+    }
 }

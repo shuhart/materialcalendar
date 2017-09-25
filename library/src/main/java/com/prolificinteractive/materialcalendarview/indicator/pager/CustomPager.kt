@@ -39,6 +39,6 @@ class CustomPager(context: Context) : ViewPager(context) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         val specWidthSize = View.MeasureSpec.getSize(widthMeasureSpec)
 //        pageMargin = (0.2 * specWidthSize).toInt()
-        pageMargin = DpUtils.dpToPx(context, -140)
+        pageMargin = DpUtils.dpToPx(context, -128)
     }
 }

@@ -51,4 +51,6 @@
 
     <string name="today">Today is the day</string>
     <string name="title_activity_bottom_sheet">Bottom sheet</string>
+    <string name="clear">Clear</string>
+    <string name="done">done</string>
 </resources>
