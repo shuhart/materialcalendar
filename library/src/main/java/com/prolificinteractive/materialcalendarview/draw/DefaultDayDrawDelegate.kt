@@ -25,13 +25,15 @@ class DefaultDayDrawDelegate(private val mcv: MaterialCalendarView) : DayDrawDel
                 return
             }
             if (selectedDays.first() == dayView.date) {
-                if (selectedDays.size > 1 && !CalendarUtils.isLastDayOfMonth(dayView.date!!)) {
+                if (selectedDays.size > 1 && !CalendarUtils.isLastDayOfMonth(dayView.date!!) &&
+                        !CalendarUtils.isLastDayOfWeek(dayView.date!!)) {
                     canvas.drawRect(firstRect, rangePaint)
                 }
                 canvas.drawCircle(cx, cy, radius, circlePaint)
                 dayView.isChecked = true
             } else if (selectedDays.size > 1 && selectedDays.last() == dayView.date) {
-                if (!CalendarUtils.isIFirstDayOfMonth(dayView.date!!)) {
+                if (!CalendarUtils.isIFirstDayOfMonth(dayView.date!!) &&
+                        !CalendarUtils.isFirstDayOfWeek(dayView.date!!)) {
                     canvas.drawRect(lastRect, rangePaint)
                 }
                 canvas.drawCircle(cx, cy, radius, circlePaint)
