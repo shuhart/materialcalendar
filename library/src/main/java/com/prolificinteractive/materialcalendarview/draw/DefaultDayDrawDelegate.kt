@@ -14,8 +14,8 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 class DefaultDayDrawDelegate(private val mcv: MaterialCalendarView) : DayDrawDelegate {
     private var selectionColor = Color.GRAY
     private var selectionRangeColor = Color.LTGRAY
-    private var circlePaint: Paint = Paint().apply { color = Color.GRAY; style = Paint.Style.FILL }
-    private var rangePaint: Paint = Paint().apply { color = Color.LTGRAY; style = Paint.Style.FILL }
+    private var circlePaint: Paint = Paint().apply { color = Color.GRAY; style = Paint.Style.FILL; isAntiAlias = true }
+    private var rangePaint: Paint = Paint().apply { color = Color.LTGRAY; style = Paint.Style.FILL; isAntiAlias = true }
 
     override fun onDraw(canvas: Canvas, dayDrawData: DayDrawData, dayView: DayView) {
         dayDrawData.apply {

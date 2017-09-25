@@ -16,7 +16,7 @@
         app:mcv_bottomTopDayPadding="4dp"
         app:mcv_selectionRangeColor="#dcf0fe"
         app:mcv_selectionColor="#1398f5"
-        app:mcv_tileSize="48dp"
+        app:mcv_tileSize="@dimen/mcv_tile_size"
         />
 
     <TextView

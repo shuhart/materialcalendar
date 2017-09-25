@@ -6,4 +6,5 @@
     <dimen name="calendar_size_small">100dp</dimen>
     <dimen name="tile_size_medium">32dp</dimen>
     <dimen name="tile_size_small">16dp</dimen>
+    <dimen name="mcv_tile_size">40dp</dimen>
 </resources>
