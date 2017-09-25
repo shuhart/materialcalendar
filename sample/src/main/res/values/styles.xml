@@ -8,9 +8,19 @@
         <item name="colorAccent">@color/sample_accent</item>
     </style>
 
-    <style name="CustomDayTextAppearance"
+    <style name="NoActionBar" parent="Theme.AppCompat.NoActionBar"/>
+
+    <style name="TextAppearance.MaterialCalendarWidget.Date"
         parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textSize">13sp</item>
         <item name="android:textColor">@color/mcv_text_date_light</item>
+    </style>
+
+    <style name="TextAppearance.MaterialCalendarWidget.WeekDay"
+        parent="android:TextAppearance.DeviceDefault.Small">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#a7a9ac</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
 </resources>

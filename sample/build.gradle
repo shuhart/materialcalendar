@@ -31,6 +31,7 @@ dependencies {
     compile rootProject.ext.supportAppCompat
     compile rootProject.ext.recyclerviewV7
     compile rootProject.ext.butterknife
+    compile rootProject.ext.supportDesign
     compile 'com.android.support:multidex:1.0.1'
     annotationProcessor rootProject.ext.butterknifeCompiler
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"

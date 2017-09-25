@@ -3,7 +3,6 @@ package com.prolificinteractive.materialcalendarview.indicator.pager
 import android.content.Context
 import android.content.res.TypedArray
 import android.support.v4.view.ViewPager
-import android.view.MotionEvent
 import android.view.View
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarPager
@@ -40,6 +39,6 @@ class CustomPager(context: Context) : ViewPager(context) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         val specWidthSize = View.MeasureSpec.getSize(widthMeasureSpec)
 //        pageMargin = (0.2 * specWidthSize).toInt()
-//        pageMargin = DpUtils.dpToPx(context, -140)
+        pageMargin = DpUtils.dpToPx(context, -140)
     }
 }
