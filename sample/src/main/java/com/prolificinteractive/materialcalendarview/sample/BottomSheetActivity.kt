@@ -37,8 +37,13 @@ class BottomSheetActivity : AppCompatActivity(), OnDateSelectedListener, OnMonth
         }
 
         val content: View = findViewById(R.id.main_content)
-        behavior = CustomBottomSheetBehavior((0.15 * DpUtils.getDisplayHeightInPx(this)).toInt())
+        val screenWidth = DpUtils.getDisplayHeightInPx(this)
+        val offset = (0.15 * screenWidth).toInt()
+        behavior = CustomBottomSheetBehavior(offset)
         val lp = content.layoutParams as CoordinatorLayout.LayoutParams
+        lp.height = screenWidth - offset
+        content.layoutParams = lp
+        behavior.isHideable = true
         lp.behavior = behavior
 
         behavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
@@ -47,19 +52,16 @@ class BottomSheetActivity : AppCompatActivity(), OnDateSelectedListener, OnMonth
             }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED ||
+                        newState == BottomSheetBehavior.STATE_HIDDEN) {
                     finish()
                 }
             }
         })
 
-        val coordinatorLayout: CoordinatorLayout = findViewById(R.id.coordinator)
-
-//        findViewById<View>(R.id.coordinator).setOnClickListener {
-//            if (behavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
-//                finish()
-//            } else behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-//        }
+        findViewById<View>(R.id.coordinator).setOnClickListener {
+            behavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
 
         widget = findViewById(R.id.calendarView)
 
