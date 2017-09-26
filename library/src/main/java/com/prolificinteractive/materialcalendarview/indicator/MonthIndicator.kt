@@ -2,6 +2,7 @@ package com.prolificinteractive.materialcalendarview.indicator
 
 import android.content.res.TypedArray
 import android.view.View
+import android.view.ViewGroup
 import com.prolificinteractive.materialcalendarview.*
 import com.prolificinteractive.materialcalendarview.format.TitleFormatter
 
@@ -28,4 +29,6 @@ interface MonthIndicator {
     fun setOnTitleClickListener(listener: View.OnClickListener)
 
     fun desiredHeightTileNumber(): Int = 1
+
+    fun getDesiredLayoutParamsWidth(): Int = ViewGroup.LayoutParams.WRAP_CONTENT
 }

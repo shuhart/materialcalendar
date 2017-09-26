@@ -12,7 +12,6 @@ import android.support.annotation.ArrayRes
 import android.support.annotation.IntDef
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
-import android.util.Log
 import android.util.SparseArray
 import android.util.TypedValue
 import android.view.MotionEvent
@@ -674,11 +673,11 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
     fun allowClickDaysOutsideCurrentMonth(): Boolean = allowClickDaysOutsideCurrentMonth
 
     @Suppress("NAME_SHADOWING")
-    /**
-     * Set a custom formatter for the month/year title
-     *
-     * @param titleFormatter new formatter to use, null to use default formatter
-     */
+            /**
+             * Set a custom formatter for the month/year title
+             *
+             * @param titleFormatter new formatter to use, null to use default formatter
+             */
     fun setTitleFormatter(titleFormatter: TitleFormatter?) {
         var titleFormatter = titleFormatter
         if (titleFormatter == null) {
@@ -1095,7 +1094,17 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
         for (i in 0 until count) {
             val child = getChildAt(i)
 
-            val p = child.layoutParams as LayoutParams
+            val params = child.layoutParams as LayoutParams
+
+            if (child == monthIndicatorView) {
+                if (monthIndicator.getDesiredLayoutParamsWidth() == ViewGroup.LayoutParams.MATCH_PARENT)
+                    child.measure(View.MeasureSpec.makeMeasureSpec(specWidthSize, View.MeasureSpec.EXACTLY),
+                            View.MeasureSpec.makeMeasureSpec(
+                                    (child.layoutParams as LayoutParams).height * measureTileHeight,
+                                    View.MeasureSpec.EXACTLY
+                            ))
+                continue
+            }
 
             val childWidthMeasureSpec = View.MeasureSpec.makeMeasureSpec(
                     DEFAULT_DAYS_IN_WEEK * measureTileWidth,
@@ -1103,7 +1112,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
             )
 
             val childHeightMeasureSpec = View.MeasureSpec.makeMeasureSpec(
-                    p.height * measureTileHeight,
+                    params.height * measureTileHeight,
                     View.MeasureSpec.EXACTLY
             )
 

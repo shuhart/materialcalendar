@@ -3,6 +3,7 @@ package com.prolificinteractive.materialcalendarview.indicator.pager
 import android.content.Context
 import android.content.res.TypedArray
 import android.support.v4.view.ViewPager
+import android.view.MotionEvent
 import android.view.View
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarPager
@@ -21,6 +22,8 @@ class CustomPager(context: Context) : ViewPager(context) {
 
     fun init(pager: CalendarPager, mcv: MaterialCalendarView, calendarPagerAdapter: CalendarPagerAdapter<*>) {
         adapter = PagerIndicatorAdapter(calendarPagerAdapter)
+        offscreenPageLimit = 9
+        pageMargin = DpUtils.dpToPx(context, 16)
     }
 
     fun applyStyles(typedArray: TypedArray) {
@@ -39,6 +42,14 @@ class CustomPager(context: Context) : ViewPager(context) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         val specWidthSize = View.MeasureSpec.getSize(widthMeasureSpec)
 //        pageMargin = (0.2 * specWidthSize).toInt()
-        pageMargin = DpUtils.dpToPx(context, -128)
+//        pageMargin = DpUtils.dpToPx(context, -100)
+    }
+
+    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
+        return false
+    }
+
+    override fun onTouchEvent(ev: MotionEvent?): Boolean {
+        return false
     }
 }

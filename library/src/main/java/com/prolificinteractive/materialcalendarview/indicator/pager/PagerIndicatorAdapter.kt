@@ -20,7 +20,7 @@ import java.util.*
 class PagerIndicatorAdapter(private val pagerAdapter: CalendarPagerAdapter<*>) : PagerAdapter() {
     private val currentViews: ArrayDeque<FrameLayout> = ArrayDeque()
     var defaultButtonBackgroundColor = Color.parseColor("#f8f9f9")
-    var defaultButtonTextColor = Color.parseColor("#cacdd0")
+    var defaultButtonTextColor = Color.parseColor("#1a1a1a")
     var selectedButtonBackgroundColor = Color.parseColor("#1398f5")
     var selectedButtonTextColor = Color.WHITE
 
@@ -44,18 +44,12 @@ class PagerIndicatorAdapter(private val pagerAdapter: CalendarPagerAdapter<*>) :
                 DateUtils.FORMAT_NO_MONTH_DAY or DateUtils.FORMAT_SHOW_YEAR)
         view.tag = month
         initView(view, month)
-
         val parent = FrameLayout(container.context)
-        // (0.5 * DpUtils.getDisplayWidthInPx(parent.context)).toInt()
         val lp = FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         lp.gravity = Gravity.CENTER
         parent.addView(view, lp)
-
         currentViews.add(parent)
         container.addView(parent)
-
-//        val vlp = ViewPager.LayoutParams()
-//        (container as ViewPager).updateViewLayout(parent, vlp)
         return parent
     }
 
@@ -64,10 +58,8 @@ class PagerIndicatorAdapter(private val pagerAdapter: CalendarPagerAdapter<*>) :
             selectedButtonBackgroundColor else defaultButtonBackgroundColor
         val textColor = if (mainColor == selectedButtonBackgroundColor)
             selectedButtonTextColor else defaultButtonTextColor
-        view.init(mainColor = selectedButtonBackgroundColor, mainTextColor = textColor,
+        view.init(mainColor = mainColor, mainTextColor = textColor,
                 cornerRadius = 50)
-        val dp8 = DpUtils.dpToPx(view.context, 8)
-        view.setPadding(dp8, 0, dp8, 0)
         val dp184 = DpUtils.dpToPx(view.context, 184)
         view.minWidth = dp184
         view.height = DpUtils.dpToPx(view.context, 40)

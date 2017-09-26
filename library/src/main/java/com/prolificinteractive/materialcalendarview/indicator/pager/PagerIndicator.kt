@@ -2,10 +2,14 @@ package com.prolificinteractive.materialcalendarview.indicator.pager
 
 import android.content.Context
 import android.content.res.TypedArray
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
 import com.prolificinteractive.materialcalendarview.*
 import com.prolificinteractive.materialcalendarview.format.TitleFormatter
 import com.prolificinteractive.materialcalendarview.indicator.MonthIndicator
+import com.prolificinteractive.materialcalendarview.utils.DpUtils
 
 /**
  * Created by Bogdan Kornev
@@ -28,7 +32,11 @@ class PagerIndicator(context: Context) : MonthIndicator {
 
     override fun getView(mcv: MaterialCalendarView, pager: CalendarPager, adapter: CalendarPagerAdapter<*>): View {
         view.init(pager, mcv, adapter)
-        return view
+        val container = PagerContainer(pager.context)
+        val lp = FrameLayout.LayoutParams(DpUtils.dpToPx(pager.context, 184), ViewGroup.LayoutParams.WRAP_CONTENT)
+        lp.gravity = Gravity.CENTER_HORIZONTAL
+        container.addView(view, lp)
+        return container
     }
 
     override fun applyStyles(typedArray: TypedArray) {
@@ -36,4 +44,6 @@ class PagerIndicator(context: Context) : MonthIndicator {
     }
 
     override fun desiredHeightTileNumber(): Int = 2
+
+    override fun getDesiredLayoutParamsWidth(): Int = ViewGroup.LayoutParams.MATCH_PARENT
 }
