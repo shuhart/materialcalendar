@@ -107,9 +107,9 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
     var maximumDate: CalendarDay? = null
         private set
 
-    private var listener: OnDateSelectedListener? = null
-    private var monthListener: OnMonthChangedListener? = null
-    private var rangeListener: OnRangeSelectedListener? = null
+    private val dateListeners = mutableListOf<OnDateSelectedListener>()
+    private val monthListeners = mutableListOf<OnMonthChangedListener>()
+    private val rangeListeners = mutableListOf<OnRangeSelectedListener>()
 
     var calendarContentDescription: CharSequence? = null
         get() = if (field != null)
@@ -885,16 +885,16 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
         }
     }
 
-    fun setOnDateChangedListener(listener: OnDateSelectedListener) {
-        this.listener = listener
+    fun addOnDateChangedListener(listener: OnDateSelectedListener) {
+        dateListeners.add(listener)
     }
 
-    fun setOnMonthChangedListener(listener: OnMonthChangedListener) {
-        this.monthListener = listener
+    fun addOnMonthChangedListener(listener: OnMonthChangedListener) {
+        monthListeners.add(listener)
     }
 
-    fun setOnRangeSelectedListener(listener: OnRangeSelectedListener) {
-        this.rangeListener = listener
+    fun addOnRangeSelectedListener(listener: OnRangeSelectedListener) {
+        rangeListeners.add(listener)
     }
 
     fun setOnTitleClickListener(listener: View.OnClickListener) {
@@ -902,12 +902,10 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
     }
 
     protected fun dispatchOnDateSelected(day: CalendarDay, selected: Boolean) {
-        val l = listener
-        l?.onDateSelected(this@MaterialCalendarView, day, selected)
+        dateListeners.forEach { it.onDateSelected(this@MaterialCalendarView, day, selected) }
     }
 
     protected fun dispatchOnRangeSelected(firstDay: CalendarDay, lastDay: CalendarDay) {
-        val listener = rangeListener
         val days = ArrayList<CalendarDay>()
 
         val counter = Calendar.getInstance()
@@ -923,12 +921,11 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
             counter.add(Calendar.DATE, 1)
         }
 
-        listener?.onRangeSelected(this@MaterialCalendarView, days)
+        rangeListeners.forEach { it.onRangeSelected(this@MaterialCalendarView, days) }
     }
 
     protected fun dispatchOnMonthChanged(day: CalendarDay?) {
-        val l = monthListener
-        l?.onMonthChanged(this@MaterialCalendarView, day!!)
+        monthListeners.forEach { it.onMonthChanged(this@MaterialCalendarView, day!!) }
     }
 
     /**

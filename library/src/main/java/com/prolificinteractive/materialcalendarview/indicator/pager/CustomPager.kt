@@ -3,12 +3,9 @@ package com.prolificinteractive.materialcalendarview.indicator.pager
 import android.content.Context
 import android.content.res.TypedArray
 import android.support.v4.view.ViewPager
+import android.util.Log
 import android.view.MotionEvent
-import android.view.View
-import com.prolificinteractive.materialcalendarview.CalendarDay
-import com.prolificinteractive.materialcalendarview.CalendarPager
-import com.prolificinteractive.materialcalendarview.CalendarPagerAdapter
-import com.prolificinteractive.materialcalendarview.MaterialCalendarView
+import com.prolificinteractive.materialcalendarview.*
 import com.prolificinteractive.materialcalendarview.utils.DpUtils
 
 /**
@@ -16,12 +13,30 @@ import com.prolificinteractive.materialcalendarview.utils.DpUtils
  * on 9/23/2017, 10:41 AM.
  */
 class CustomPager(context: Context) : ViewPager(context) {
+    private lateinit var pagerIndicatorAdapter: PagerIndicatorAdapter
     fun updateUi(currentMonth: CalendarDay) {
-        currentItem = (adapter as PagerIndicatorAdapter).indexOf(currentMonth)
+        currentItem = pagerIndicatorAdapter.indexOf(currentMonth)
     }
 
     fun init(pager: CalendarPager, mcv: MaterialCalendarView, calendarPagerAdapter: CalendarPagerAdapter<*>) {
-        adapter = PagerIndicatorAdapter(calendarPagerAdapter)
+        pagerIndicatorAdapter = PagerIndicatorAdapter(calendarPagerAdapter)
+        adapter = pagerIndicatorAdapter
+        mcv.addOnRangeSelectedListener(object : OnRangeSelectedListener {
+            override fun onRangeSelected(widget: MaterialCalendarView, dates: List<CalendarDay>) {
+                Log.d("CustomPager", "onRangeSelected(${dates.firstOrNull()}, ${dates.lastOrNull()})")
+                pagerIndicatorAdapter.selectMonths(start = dates.firstOrNull(), end = dates.lastOrNull())
+            }
+        })
+        mcv.addOnDateChangedListener(object : OnDateSelectedListener {
+            override fun onDateSelected(widget: MaterialCalendarView, date: CalendarDay, selected: Boolean) {
+                Log.d("CustomPager", "onDateSelected($date, selected=$selected)")
+                if (selected) {
+                    pagerIndicatorAdapter.selectMonths(start = date)
+                } else {
+                    pagerIndicatorAdapter.invalidateSelectedMonths()
+                }
+            }
+        })
         offscreenPageLimit = 9
         pageMargin = DpUtils.dpToPx(context, 16)
     }
@@ -31,18 +46,9 @@ class CustomPager(context: Context) : ViewPager(context) {
     }
 
     fun onMonthChanged(previous: CalendarDay, current: CalendarDay) {
-        if (adapter !is PagerIndicatorAdapter) return
-        val adapter = adapter as PagerIndicatorAdapter
-        val previousIndex = adapter.indexOf(previous)
-        val currentIndex = adapter.indexOf(current)
+        val previousIndex = pagerIndicatorAdapter.indexOf(previous)
+        val currentIndex = pagerIndicatorAdapter.indexOf(current)
         setCurrentItem(currentIndex, Math.abs(currentIndex - previousIndex) == 1)
-    }
-
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        val specWidthSize = View.MeasureSpec.getSize(widthMeasureSpec)
-//        pageMargin = (0.2 * specWidthSize).toInt()
-//        pageMargin = DpUtils.dpToPx(context, -100)
     }
 
     override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {

@@ -33,8 +33,11 @@ class PagerIndicatorAdapter(private val pagerAdapter: CalendarPagerAdapter<*>) :
         })
     }
 
-    private fun invalidateSelectedMonths() {
-
+    fun invalidateSelectedMonths() {
+        for (view in currentViews) {
+            (view.getChildAt(0) as SmartButton).setBigButtonColor(color = defaultButtonBackgroundColor,
+                    textColor = defaultButtonTextColor)
+        }
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
@@ -54,10 +57,12 @@ class PagerIndicatorAdapter(private val pagerAdapter: CalendarPagerAdapter<*>) :
     }
 
     private fun initView(view: SmartButton, month: CalendarDay) {
-        val mainColor = if (pagerAdapter.getSelectedDates().any { it.month == month.month })
-            selectedButtonBackgroundColor else defaultButtonBackgroundColor
-        val textColor = if (mainColor == selectedButtonBackgroundColor)
-            selectedButtonTextColor else defaultButtonTextColor
+        val mainColor = if (pagerAdapter.getSelectedDates().any { it.month == month.month }) {
+            selectedButtonBackgroundColor
+        } else defaultButtonBackgroundColor
+        val textColor = if (mainColor == selectedButtonBackgroundColor) {
+            selectedButtonTextColor
+        } else defaultButtonTextColor
         view.init(mainColor = mainColor, mainTextColor = textColor,
                 cornerRadius = 50)
         val dp184 = DpUtils.dpToPx(view.context, 184)
@@ -86,5 +91,35 @@ class PagerIndicatorAdapter(private val pagerAdapter: CalendarPagerAdapter<*>) :
         val view = `object` as FrameLayout
         currentViews.remove(view)
         container.removeView(view)
+    }
+
+    fun selectMonths(start: CalendarDay?, end: CalendarDay? = null) {
+        invalidateSelectedMonths()
+        if (start == null) {
+            return
+        }
+        if (end == null) {
+            return selectMonthInternal {
+                val month = it.tag as CalendarDay
+                month.month == start.month &&
+                        month.year == start.year
+            }
+        }
+        selectMonthInternal {
+            val month = it.tag as CalendarDay
+            month.month == start.month && month.year == start.year ||
+                    month.isInRange(start, end)
+
+        }
+    }
+
+    private fun selectMonthInternal(predicate: (SmartButton) -> Boolean) {
+        currentViews
+                .map { it.getChildAt(0) as SmartButton }
+                .filter(predicate)
+                .forEach {
+                    it.setBigButtonColor(color = selectedButtonBackgroundColor,
+                            textColor = selectedButtonTextColor)
+                }
     }
 }

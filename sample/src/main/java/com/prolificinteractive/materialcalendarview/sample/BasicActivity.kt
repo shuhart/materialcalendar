@@ -21,8 +21,8 @@ class BasicActivity : AppCompatActivity(), OnDateSelectedListener, OnMonthChange
         setContentView(R.layout.activity_basic)
         widget = findViewById(R.id.calendarView)
 
-        widget.setOnDateChangedListener(this)
-        widget.setOnMonthChangedListener(this)
+        widget.addOnDateChangedListener(this)
+        widget.addOnMonthChangedListener(this)
         widget.selectionMode = MaterialCalendarView.SELECTION_MODE_RANGE
         textView = findViewById(R.id.textView)
         //Setup initial text

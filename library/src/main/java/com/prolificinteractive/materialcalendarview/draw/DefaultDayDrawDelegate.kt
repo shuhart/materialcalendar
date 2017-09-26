@@ -24,35 +24,48 @@ class DefaultDayDrawDelegate(private val mcv: MaterialCalendarView) : DayDrawDel
                 dayView.isChecked = false
                 return
             }
-            if (selectedDays.first() == dayView.date) {
-                if (selectedDays.size > 1 && !CalendarUtils.isLastDayOfMonth(dayView.date!!) &&
-                        !CalendarUtils.isLastDayOfWeek(dayView.date!!)) {
+            val date = dayView.date!!
+            if (selectedDays.first() == date) {
+                if (selectedDays.size > 1 && !CalendarUtils.isLastDayOfMonth(date) &&
+                        !CalendarUtils.isLastDayOfWeek(date)) {
                     canvas.drawRect(firstRect, rangePaint)
                 }
                 canvas.drawCircle(cx, cy, radius, circlePaint)
                 dayView.isChecked = true
-            } else if (selectedDays.size > 1 && selectedDays.last() == dayView.date) {
-                if (!CalendarUtils.isIFirstDayOfMonth(dayView.date!!) &&
-                        !CalendarUtils.isFirstDayOfWeek(dayView.date!!)) {
+            } else if (selectedDays.size > 1 && selectedDays.last() == date) {
+                if (!CalendarUtils.isFirstDayOfMonth(date) &&
+                        !CalendarUtils.isFirstDayOfWeek(date)) {
                     canvas.drawRect(lastRect, rangePaint)
                 }
                 canvas.drawCircle(cx, cy, radius, circlePaint)
                 dayView.isChecked = true
-            } else if (selectedDays.contains(dayView.date)) {
+            } else if (selectedDays.contains(date)) {
                 when {
-                    CalendarUtils.isFirstDayOfWeek(dayView.date!!) -> {
-                        if (!CalendarUtils.isLastDayOfMonth(dayView.date!!)) {
+                    CalendarUtils.isFirstDayOfWeek(date) -> {
+                        if (!CalendarUtils.isLastDayOfMonth(date)) {
                             canvas.drawRect(firstRect, rangePaint)
                         }
                         canvas.drawCircle(cx, cy, radius, rangePaint)
                     }
-                    CalendarUtils.isLastDayOfWeek(dayView.date!!) -> {
-                        if (!CalendarUtils.isIFirstDayOfMonth(dayView.date!!)) {
+                    CalendarUtils.isLastDayOfWeek(date) -> {
+                        if (!CalendarUtils.isFirstDayOfMonth(date)) {
                             canvas.drawRect(lastRect, rangePaint)
                         }
                         canvas.drawCircle(cx, cy, radius, rangePaint)
                     }
-                    else -> canvas.drawRect(rangeRect, rangePaint)
+                    else -> {
+                        when {
+                            CalendarUtils.isFirstDayOfMonth(date) -> {
+                                canvas.drawRect(firstRect, rangePaint)
+                                canvas.drawCircle(cx, cy, radius, rangePaint)
+                            }
+                            CalendarUtils.isLastDayOfMonth(date) -> {
+                                canvas.drawRect(lastRect, rangePaint)
+                                canvas.drawCircle(cx, cy, radius, rangePaint)
+                            }
+                            else -> canvas.drawRect(rangeRect, rangePaint)
+                        }
+                    }
                 }
                 dayView.isChecked = false
             } else {

@@ -91,6 +91,7 @@ class SmartButton @JvmOverloads constructor(context: Context, attrs: AttributeSe
 
     fun setBigButtonColor(color: Int, textColor: Int = mainTextColor) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mainColor = color
             mainTextColor = textColor
             val shape = GradientDrawable()
             shape.shape = GradientDrawable.RECTANGLE
@@ -110,6 +111,7 @@ class SmartButton @JvmOverloads constructor(context: Context, attrs: AttributeSe
             background = states
             setTextColor(textColor)
         } else {
+            mainColor = color
             mainTextColor = textColor
             val states = StateListDrawable()
 

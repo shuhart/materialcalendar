@@ -82,6 +82,6 @@ object CalendarUtils {
     fun isLastDayOfMonth(date: CalendarDay): Boolean =
             date.calendar.get(Calendar.DAY_OF_MONTH) == date.calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
 
-    fun isIFirstDayOfMonth(date: CalendarDay): Boolean =
+    fun isFirstDayOfMonth(date: CalendarDay): Boolean =
             date.calendar.get(Calendar.DAY_OF_MONTH) == 1
 }
