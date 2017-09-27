@@ -6,17 +6,16 @@ import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.CoordinatorLayout
 import android.support.v7.app.AppCompatActivity
+import android.text.format.DateUtils
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
-import com.prolificinteractive.materialcalendarview.CalendarDay
-import com.prolificinteractive.materialcalendarview.MaterialCalendarView
-import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
-import com.prolificinteractive.materialcalendarview.OnMonthChangedListener
+import com.prolificinteractive.materialcalendarview.*
+import com.prolificinteractive.materialcalendarview.utils.CalendarUtils
 import com.prolificinteractive.materialcalendarview.utils.DpUtils
 import java.text.SimpleDateFormat
 
-class BottomSheetActivity : AppCompatActivity(), OnDateSelectedListener, OnMonthChangedListener {
+class BottomSheetActivity : AppCompatActivity(), OnDateSelectedListener, OnMonthChangedListener, OnRangeSelectedListener {
     private lateinit var widget: MaterialCalendarView
     private lateinit var textView: TextView
 
@@ -47,9 +46,7 @@ class BottomSheetActivity : AppCompatActivity(), OnDateSelectedListener, OnMonth
         lp.behavior = behavior
 
         behavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-
-            }
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED ||
@@ -66,6 +63,7 @@ class BottomSheetActivity : AppCompatActivity(), OnDateSelectedListener, OnMonth
         widget = findViewById(R.id.calendarView)
 
         widget.addOnDateChangedListener(this)
+        widget.addOnRangeSelectedListener(this)
         widget.addOnMonthChangedListener(this)
         widget.selectionMode = MaterialCalendarView.SELECTION_MODE_RANGE
         textView = findViewById(R.id.textView)
@@ -77,15 +75,33 @@ class BottomSheetActivity : AppCompatActivity(), OnDateSelectedListener, OnMonth
         textView.text = selectedDatesString
     }
 
+    override fun onRangeSelected(widget: MaterialCalendarView, dates: List<CalendarDay>) {
+        textView.text = selectedDatesString
+    }
+
     override fun onMonthChanged(widget: MaterialCalendarView, date: CalendarDay) {
         supportActionBar?.title = FORMATTER.format(date.date)
     }
 
     private val selectedDatesString: String
         get() {
-            val date = widget.selectedDate ?: return "No Selection"
-            return FORMATTER.format(date.date)
+            val dates = widget.selectedDates
+            if (dates.isNotEmpty()) {
+                return format(start = dates.first(), end = dates.last())
+            }
+            val date = widget.selectedDate ?: return getString(R.string.lifetime)
+            return format(date)
         }
+
+    private fun format(start: CalendarDay, end: CalendarDay?= null): String {
+        if (end == null) {
+            return DateUtils.formatDateTime(this, start.date.time, 0)
+        }
+        if (CalendarUtils.isFirstDayOfMonth(start) && CalendarUtils.isLastDayOfMonth(end)) {
+            return DateUtils.formatDateTime(this, start.date.time, DateUtils.FORMAT_NO_MONTH_DAY or DateUtils.FORMAT_SHOW_YEAR)
+        }
+        return DateUtils.formatDateRange(this, start.date.time, end.date.time, DateUtils.FORMAT_SHOW_YEAR)
+    }
 
     companion object {
 
