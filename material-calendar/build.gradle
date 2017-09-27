@@ -7,7 +7,7 @@ ext {
     bintrayRepo = 'MaterialCalendar'
     bintrayName = 'material-calendar'
 
-    publishedGroupId = 'com.shuhart.materialcalendar'
+        publishedGroupId = 'com.shuhart'
     libraryName = 'material-calendar'
     artifact = 'material-calendar'
 
@@ -152,11 +152,6 @@ if (localProps.exists()) {
             version {
                 name = libraryVersion
                 desc = libraryDescription
-                gpg {
-                    sign = true //Determines whether to GPG sign the files. The default is false
-                    passphrase = properties.getProperty("bintray.gpg.password")
-                    //Optional. The passphrase for GPG signing'
-                }
             }
         }
     }
