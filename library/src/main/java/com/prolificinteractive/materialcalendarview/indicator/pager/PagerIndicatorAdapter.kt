@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarPagerAdapter
+import com.prolificinteractive.materialcalendarview.utils.CalendarUtils
 import com.prolificinteractive.materialcalendarview.utils.DpUtils
 import java.util.*
 
@@ -53,6 +54,13 @@ class PagerIndicatorAdapter(private val pagerAdapter: CalendarPagerAdapter<*>) :
         parent.addView(view, lp)
         currentViews.add(parent)
         container.addView(parent)
+        view.setOnClickListener { btn ->
+            val day = btn.tag as CalendarDay
+            pagerAdapter.mcv.selectRange(day, CalendarDay.from(
+                    day.year,
+                    day.month,
+                    day.calendar.getActualMaximum(Calendar.DAY_OF_MONTH)))
+        }
         return parent
     }
 
