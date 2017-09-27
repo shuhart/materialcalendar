@@ -1,13 +1,13 @@
 package com.prolificinteractive.materialcalendarview
 
 import android.content.Context
-import android.support.v4.view.BetterViewPager
+import android.support.v4.view.ViewPager
 import android.view.MotionEvent
 
 /**
  * Custom ViewPager that allows swiping to be disabled.
  */
-class CalendarPager(context: Context) : BetterViewPager(context) {
+class CalendarPager(context: Context) : ViewPager(context) {
 
     var isPagingEnabled = true
 

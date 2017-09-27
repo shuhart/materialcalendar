@@ -14,7 +14,7 @@ import java.util.*
 /**
  * Pager adapter backing the calendar view
  */
-abstract class CalendarPagerAdapter<V : CalendarPagerView>(protected val mcv: MaterialCalendarView) : PagerAdapter() {
+abstract class CalendarPagerAdapter<V : CalendarPagerView>(val mcv: MaterialCalendarView) : PagerAdapter() {
 
     private val currentViews: ArrayDeque<V> = ArrayDeque()
     private val today: CalendarDay = CalendarDay.today()
@@ -188,8 +188,8 @@ abstract class CalendarPagerAdapter<V : CalendarPagerView>(protected val mcv: Ma
         this.minDate = min
         this.maxDate = max
         for (pagerView in currentViews) {
-            pagerView.setMinimumDate(min!!)
-            pagerView.setMaximumDate(max!!)
+            pagerView.setMinimumDate(min)
+            pagerView.setMaximumDate(max)
         }
 
         if (min == null) {

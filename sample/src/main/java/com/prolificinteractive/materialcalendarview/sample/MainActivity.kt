@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val list = findViewById(R.id.list) as RecyclerView
+        val list = findViewById<RecyclerView>(R.id.list)
         list.layoutManager = LinearLayoutManager(this)
         list.adapter = ResolveInfoAdapter(this, allSampleActivities)
     }
@@ -64,10 +64,9 @@ class MainActivity : AppCompatActivity() {
 
         inner class ResolveInfoViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
-            val textView: TextView
+            val textView: TextView = view.findViewById(android.R.id.text1)
 
             init {
-                this.textView = view.findViewById(android.R.id.text1) as TextView
                 view.setOnClickListener(this)
             }
 

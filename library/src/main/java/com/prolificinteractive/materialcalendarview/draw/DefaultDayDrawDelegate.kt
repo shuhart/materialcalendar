@@ -14,8 +14,8 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 class DefaultDayDrawDelegate(private val mcv: MaterialCalendarView) : DayDrawDelegate {
     private var selectionColor = Color.GRAY
     private var selectionRangeColor = Color.LTGRAY
-    private var circlePaint: Paint = Paint().apply { color = Color.GRAY; style = Paint.Style.FILL }
-    private var rangePaint: Paint = Paint().apply { color = Color.LTGRAY; style = Paint.Style.FILL }
+    private var circlePaint: Paint = Paint().apply { color = Color.GRAY; style = Paint.Style.FILL; isAntiAlias = true }
+    private var rangePaint: Paint = Paint().apply { color = Color.LTGRAY; style = Paint.Style.FILL; isAntiAlias = true }
 
     override fun onDraw(canvas: Canvas, dayDrawData: DayDrawData, dayView: DayView) {
         dayDrawData.apply {
@@ -24,33 +24,48 @@ class DefaultDayDrawDelegate(private val mcv: MaterialCalendarView) : DayDrawDel
                 dayView.isChecked = false
                 return
             }
-            if (selectedDays.first() == dayView.date) {
-                if (selectedDays.size > 1 && !CalendarUtils.isLastDayOfMonth(dayView.date!!)) {
+            val date = dayView.date!!
+            if (selectedDays.first() == date) {
+                if (selectedDays.size > 1 && !CalendarUtils.isLastDayOfMonth(date) &&
+                        !CalendarUtils.isLastDayOfWeek(date)) {
                     canvas.drawRect(firstRect, rangePaint)
                 }
                 canvas.drawCircle(cx, cy, radius, circlePaint)
                 dayView.isChecked = true
-            } else if (selectedDays.size > 1 && selectedDays.last() == dayView.date) {
-                if (!CalendarUtils.isIFirstDayOfMonth(dayView.date!!)) {
+            } else if (selectedDays.size > 1 && selectedDays.last() == date) {
+                if (!CalendarUtils.isFirstDayOfMonth(date) &&
+                        !CalendarUtils.isFirstDayOfWeek(date)) {
                     canvas.drawRect(lastRect, rangePaint)
                 }
                 canvas.drawCircle(cx, cy, radius, circlePaint)
                 dayView.isChecked = true
-            } else if (selectedDays.contains(dayView.date)) {
+            } else if (selectedDays.contains(date)) {
                 when {
-                    CalendarUtils.isFirstDayOfWeek(dayView.date!!) -> {
-                        if (!CalendarUtils.isLastDayOfMonth(dayView.date!!)) {
+                    CalendarUtils.isFirstDayOfWeek(date) -> {
+                        if (!CalendarUtils.isLastDayOfMonth(date)) {
                             canvas.drawRect(firstRect, rangePaint)
                         }
                         canvas.drawCircle(cx, cy, radius, rangePaint)
                     }
-                    CalendarUtils.isLastDayOfWeek(dayView.date!!) -> {
-                        if (!CalendarUtils.isIFirstDayOfMonth(dayView.date!!)) {
+                    CalendarUtils.isLastDayOfWeek(date) -> {
+                        if (!CalendarUtils.isFirstDayOfMonth(date)) {
                             canvas.drawRect(lastRect, rangePaint)
                         }
                         canvas.drawCircle(cx, cy, radius, rangePaint)
                     }
-                    else -> canvas.drawRect(rangeRect, rangePaint)
+                    else -> {
+                        when {
+                            CalendarUtils.isFirstDayOfMonth(date) -> {
+                                canvas.drawRect(firstRect, rangePaint)
+                                canvas.drawCircle(cx, cy, radius, rangePaint)
+                            }
+                            CalendarUtils.isLastDayOfMonth(date) -> {
+                                canvas.drawRect(lastRect, rangePaint)
+                                canvas.drawCircle(cx, cy, radius, rangePaint)
+                            }
+                            else -> canvas.drawRect(rangeRect, rangePaint)
+                        }
+                    }
                 }
                 dayView.isChecked = false
             } else {

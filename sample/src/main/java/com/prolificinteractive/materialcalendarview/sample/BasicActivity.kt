@@ -3,8 +3,6 @@ package com.prolificinteractive.materialcalendarview.sample
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.TextView
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
@@ -15,21 +13,18 @@ import java.text.SimpleDateFormat
  * Shows off the most basic usage
  */
 class BasicActivity : AppCompatActivity(), OnDateSelectedListener, OnMonthChangedListener {
-    lateinit var widget: MaterialCalendarView
-    lateinit var textView: TextView
+    private lateinit var widget: MaterialCalendarView
+    private lateinit var textView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_basic)
-        ButterKnife.bind(this)
-        widget = findViewById(R.id.calendarView) as MaterialCalendarView
+        widget = findViewById(R.id.calendarView)
 
-        widget.setOnDateChangedListener(this)
-        widget.setOnMonthChangedListener(this)
+        widget.addOnDateChangedListener(this)
+        widget.addOnMonthChangedListener(this)
         widget.selectionMode = MaterialCalendarView.SELECTION_MODE_RANGE
-
-        textView = findViewById(R.id.textView) as TextView
-
+        textView = findViewById(R.id.textView)
         //Setup initial text
         textView.text = selectedDatesString
     }
