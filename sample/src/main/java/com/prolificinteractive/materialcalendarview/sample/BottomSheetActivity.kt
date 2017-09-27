@@ -1,5 +1,7 @@
 package com.prolificinteractive.materialcalendarview.sample
 
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -69,6 +71,33 @@ class BottomSheetActivity : AppCompatActivity(), OnDateSelectedListener, OnMonth
         textView = findViewById(R.id.textView)
         //Setup initial text
         textView.text = selectedDatesString
+
+        findViewById<View>(R.id.clear).setOnClickListener({
+            widget.clearSelection()
+        })
+
+        findViewById<View>(R.id.done).setOnClickListener {
+            val intent: Intent?
+            val dates = widget.selectedDates
+            if (dates.isNotEmpty()) {
+                intent = Intent()
+                intent.putExtras(Bundle())
+            } else {
+                val date = widget.selectedDate
+                if (date != null) {
+                    intent = Intent()
+                    intent.putExtras(Bundle())
+                } else {
+                    intent = null
+                }
+            }
+            if (intent != null) {
+                setResult(Activity.RESULT_OK, intent)
+            } else {
+                setResult(Activity.RESULT_CANCELED)
+            }
+            behavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
     }
 
     override fun onDateSelected(widget: MaterialCalendarView, date: CalendarDay, selected: Boolean) {
