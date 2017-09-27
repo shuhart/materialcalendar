@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.prolificinteractive.materialcalendarview.sample">
+    package="com.shuhart.materialcalendarview.sample">
 
     <application
         android:name="android.support.multidex.MultiDexApplication"
@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name="com.shuhart.materialcalendarview.sample.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,12 +19,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".BasicActivity"
+            android:name="com.shuhart.materialcalendarview.sample.BasicActivity"
             android:label="@string/title_activity_basic"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName="com.shuhart.materialcalendarview.sample.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.prolificinteractive.materialcalendarview.sample.MainActivity" />
+                android:value="com.shuhart.materialcalendarview.sample.MainActivity" />
 
             <intent-filter>
                 <action android:name="android.intent.action.RUN" />
@@ -33,13 +33,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".BottomSheetActivity"
+            android:name="com.shuhart.materialcalendarview.sample.BottomSheetActivity"
             android:label="@string/title_activity_bottom_sheet"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.shuhart.materialcalendarview.sample.MainActivity"
             android:theme="@style/NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.prolificinteractive.materialcalendarview.sample.MainActivity" />
+                android:value="com.shuhart.materialcalendarview.sample.MainActivity" />
 
             <intent-filter>
                 <action android:name="android.intent.action.RUN" />
