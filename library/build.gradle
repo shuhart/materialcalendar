@@ -1,5 +1,31 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+ext {
+    bintrayRepo = 'MaterialCalendar'
+    bintrayName = 'material-calendar'
+
+    publishedGroupId = 'com.shuhart.materialcalendar'
+    libraryName = 'material-calendar'
+    artifact = 'material-calendar'
+
+    libraryDescription = 'A Material design back port of Android\'s CalendarView.'
+
+    siteUrl = 'https://github.com/shuhart/materialcalendar'
+    gitUrl = 'https://github.com/shuhart/materialcalendar.git'
+
+    libraryVersion = '0.9'
+
+    developerId = 'shuhart'
+    developerName = 'Redrick Shuhart'
+    developerEmail = 'kornev.b@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -49,6 +75,93 @@ android.libraryVariants.all { variant ->
     }
 }
 
-repositories {
-    mavenCentral()
+group = publishedGroupId
+version = libraryVersion
+
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+                groupId publishedGroupId
+                artifactId artifact
+
+                // Add your description here
+                name libraryName
+                description libraryDescription
+                url siteUrl
+
+                // Set your license
+                licenses {
+                    license {
+                        name licenseName
+                        url licenseUrl
+                    }
+                }
+                developers {
+                    developer {
+                        id developerId
+                        name developerName
+                        email developerEmail
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+
+                }
+            }
+        }
+    }
 }
+
+if (project.hasProperty("android")) { // Android libraries
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from android.sourceSets.main.java.srcDirs
+    }
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+// Bintray
+File localProps = project.rootProject.file('local.properties')
+
+if (localProps.exists()) {
+    Properties properties = new Properties()
+    properties.load(localProps.newDataInputStream())
+
+    bintray {
+        user = properties.getProperty("bintray.user")
+        key = properties.getProperty("bintray.apikey")
+
+        configurations = ['archives']
+        pkg {
+            repo = bintrayRepo
+            name = bintrayName
+            desc = libraryDescription
+            websiteUrl = siteUrl
+            vcsUrl = gitUrl
+            licenses = allLicenses
+            publish = true
+            publicDownloadNumbers = true
+            version {
+                name = libraryVersion
+                desc = libraryDescription
+                gpg {
+                    sign = true //Determines whether to GPG sign the files. The default is false
+                    passphrase = properties.getProperty("bintray.gpg.password")
+                    //Optional. The passphrase for GPG signing'
+                }
+            }
+        }
+    }
+}
+
+
+
+
