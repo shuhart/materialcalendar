@@ -6,7 +6,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.prolificinteractive.materialcalendarview.sample"
+        applicationId "com.shuhart.materialcalendarview.sample"
 
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
@@ -26,13 +26,11 @@ dependencies {
     // You should use the commented out line below in you're application.
     // We depend on the source directly here so that development is easier.
     compile project(':library')
-    //compile 'com.prolificinteractive:material-calendarview:1.4.3'
+    //compile 'com.shuhart:material-calendarview:1.0'
 
     compile rootProject.ext.supportAppCompat
     compile rootProject.ext.recyclerviewV7
-    compile rootProject.ext.butterknife
     compile rootProject.ext.supportDesign
     compile 'com.android.support:multidex:1.0.1'
-    annotationProcessor rootProject.ext.butterknifeCompiler
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
