@@ -29,7 +29,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.RUN" />
 
-                <category android:name="com.prolificinteractive.materialcalendarview.sample.SAMPLE" />
+                <category android:name="com.shuhart.materialcalendarview.sample.SAMPLE" />
             </intent-filter>
         </activity>
         <activity
@@ -44,7 +44,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.RUN" />
 
-                <category android:name="com.prolificinteractive.materialcalendarview.sample.SAMPLE" />
+                <category android:name="com.shuhart.materialcalendarview.sample.SAMPLE" />
             </intent-filter>
         </activity>
     </application>

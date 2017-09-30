@@ -15,7 +15,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
-    private val CATEGORY_SAMPLE = "com.prolificinteractive.materialcalendarview.sample.SAMPLE"
+    private val CATEGORY_SAMPLE = "com.shuhart.materialcalendarview.sample.SAMPLE"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
