@@ -122,14 +122,15 @@ class BottomSheetActivity : AppCompatActivity(), OnDateSelectedListener, OnMonth
             return format(date)
         }
 
-    private fun format(start: CalendarDay, end: CalendarDay?= null): String {
-        if (end == null) {
-            return DateUtils.formatDateTime(this, start.date.time, 0)
+    private fun format(start: CalendarDay, end: CalendarDay? = null): String {
+        if (end == null || start == end) {
+            return DateUtils.formatDateTime(this, start.date.time, 0).toString()
         }
         if (CalendarUtils.isFirstDayOfMonth(start) && CalendarUtils.isLastDayOfMonth(end)) {
             return DateUtils.formatDateTime(this, start.date.time, DateUtils.FORMAT_NO_MONTH_DAY or DateUtils.FORMAT_SHOW_YEAR)
         }
-        return DateUtils.formatDateRange(this, start.date.time, end.date.time, DateUtils.FORMAT_SHOW_YEAR)
+        val correctedEnd = end.date.time + end.calendar.timeZone.rawOffset
+        return DateUtils.formatDateRange(this, start.date.time, correctedEnd, DateUtils.FORMAT_SHOW_YEAR)
     }
 
     companion object {
