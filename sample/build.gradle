@@ -25,7 +25,7 @@ android {
 dependencies {
     // You should use the commented out line below in you're application.
     // We depend on the source directly here so that development is easier.
-    compile project(':library')
+    compile project(':material-calendar')
     //compile 'com.shuhart:material-calendarview:1.0'
 
     compile rootProject.ext.supportAppCompat
