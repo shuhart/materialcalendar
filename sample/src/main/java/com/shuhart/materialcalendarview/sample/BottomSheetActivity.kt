@@ -16,6 +16,7 @@ import com.shuhart.materialcalendarview.*
 import com.shuhart.materialcalendarview.utils.CalendarUtils
 import com.shuhart.materialcalendarview.utils.DpUtils
 import java.text.SimpleDateFormat
+import java.util.*
 
 class BottomSheetActivity : AppCompatActivity(), OnDateSelectedListener, OnMonthChangedListener, OnRangeSelectedListener {
     private lateinit var widget: MaterialCalendarView
@@ -68,6 +69,12 @@ class BottomSheetActivity : AppCompatActivity(), OnDateSelectedListener, OnMonth
         widget.addOnRangeSelectedListener(this)
         widget.addOnMonthChangedListener(this)
         widget.selectionMode = MaterialCalendarView.SELECTION_MODE_RANGE
+        widget.state()
+                ?.edit()
+                ?.setMinimumDate(CalendarDay.from(2012, Calendar.JANUARY, 1))
+                ?.setMaximumDate(CalendarDay.from(Date()))
+                ?.commit()
+        widget.showOtherDates = MaterialCalendarView.SHOW_OUT_OF_RANGE
         textView = findViewById(R.id.textView)
         //Setup initial text
         textView.text = selectedDatesString
