@@ -4,8 +4,6 @@ Material Calendar
 A Material design back port of Android's CalendarView. The goal is to have a Material look
 and feel, rather than 100% parity with the platform's implementation. The goal of this project is to rewrite original library in kotlin and make it more extendable and flexible.
 
-<img src="/images/screencast.gif" alt="Demo Screen Capture" width="300px" />
-
 <img src="/images/bottomsheet.gif" alt="Range selection mode with BottomSheet" width="300px" />
 
 Usage
