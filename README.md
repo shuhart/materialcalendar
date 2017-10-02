@@ -6,6 +6,8 @@ and feel, rather than 100% parity with the platform's implementation. The goal o
 
 <img src="/images/screencast.gif" alt="Demo Screen Capture" width="300px" />
 
+<img src="/images/bottomsheet.gif" alt="Range selection mode with BottomSheet" width="300px" />
+
 Usage
 -----
 
