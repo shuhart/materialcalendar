@@ -1,11 +1,10 @@
-<img src="/images/hero.png"/>
-
 Material Calendar 
 ======================
-[![Travis branch](https://img.shields.io/travis/prolificinteractive/material-calendarview.svg?maxAge=2592000)](https://travis-ci.org/prolificinteractive/material-calendarview)
 
 A Material design back port of Android's CalendarView. The goal is to have a Material look
 and feel, rather than 100% parity with the platform's implementation. The goal of this project is to rewrite original library in kotlin and make it more extendable and flexible.
+
+<img src="/images/screencast.gif" alt="Demo Screen Capture" width="300px" />
 
 Usage
 -----
