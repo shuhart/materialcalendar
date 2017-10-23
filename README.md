@@ -65,6 +65,4 @@ Would you like to contribute? Fork us and send a pull request! Be sure to checko
 
 ## License
 
-Material Calendar View is Copyright (c) 2017 Prolific Interactive. It may be redistributed under the terms specified in the [LICENSE] file.
-
 [LICENSE]: /LICENSE
