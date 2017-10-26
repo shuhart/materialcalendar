@@ -20,6 +20,7 @@ android {
     lintOptions {
         abortOnError false
     }
+    buildToolsVersion '26.0.2'
 }
 
 dependencies {
@@ -31,6 +32,6 @@ dependencies {
     compile rootProject.ext.supportAppCompat
     compile rootProject.ext.recyclerviewV7
     compile rootProject.ext.supportDesign
-    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:multidex:1.0.2'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
