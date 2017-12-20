@@ -16,7 +16,7 @@ ext {
     siteUrl = 'https://github.com/shuhart/materialcalendar'
     gitUrl = 'https://github.com/shuhart/materialcalendar.git'
 
-    libraryVersion = '0.9'
+    libraryVersion = '0.9.1'
 
     developerId = 'shuhart'
     developerName = 'Redrick Shuhart'
@@ -35,8 +35,8 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
 
-        versionCode Integer.parseInt(project.VERSION_CODE)
-        versionName project.VERSION_NAME
+        versionCode 1
+        versionName "1.0"
     }
 
     lintOptions {
