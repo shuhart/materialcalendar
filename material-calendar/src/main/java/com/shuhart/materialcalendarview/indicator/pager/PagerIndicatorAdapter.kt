@@ -64,14 +64,22 @@ class PagerIndicatorAdapter(private val pagerAdapter: CalendarPagerAdapter<*>) :
     }
 
     private fun initView(view: SmartButton, month: CalendarDay) {
-        val mainColor = if (pagerAdapter.getSelectedDates().any { it.month == month.month }) {
+        val selectedDates = pagerAdapter.getSelectedDates()
+        val isMonthSelected = selectedDates.any { it.month == month.month && it.year == month.year }
+        val mainColor = if (isMonthSelected) {
             selectedButtonBackgroundColor
-        } else defaultButtonBackgroundColor
+        } else {
+            defaultButtonBackgroundColor
+        }
         val textColor = if (mainColor == selectedButtonBackgroundColor) {
             selectedButtonTextColor
-        } else defaultButtonTextColor
-        view.init(mainColor = mainColor, mainTextColor = textColor,
-                cornerRadius = 50)
+        } else {
+            defaultButtonTextColor
+        }
+        view.init(
+            mainColor = mainColor, mainTextColor = textColor,
+            cornerRadius = 50
+        )
         val dp184 = DpUtils.dpToPx(view.context, 184)
         view.minWidth = dp184
         view.height = DpUtils.dpToPx(view.context, 40)
