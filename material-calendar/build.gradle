@@ -16,7 +16,7 @@ ext {
     siteUrl = 'https://github.com/shuhart/materialcalendar'
     gitUrl = 'https://github.com/shuhart/materialcalendar.git'
 
-    libraryVersion = '0.9.1'
+    libraryVersion = '1.0.1'
 
     developerId = 'shuhart'
     developerName = 'Redrick Shuhart'
