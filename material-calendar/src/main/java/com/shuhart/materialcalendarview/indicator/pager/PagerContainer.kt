@@ -24,11 +24,11 @@ package com.shuhart.materialcalendarview.indicator.pager
 
 import android.content.Context
 import android.graphics.Point
-import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
+import androidx.viewpager.widget.ViewPager
 
 /**
  * PagerContainer: A layout that displays a ViewPager with its children that are outside

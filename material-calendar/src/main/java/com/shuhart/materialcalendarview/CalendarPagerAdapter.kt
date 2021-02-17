@@ -1,8 +1,8 @@
 package com.shuhart.materialcalendarview
 
-import android.support.v4.view.PagerAdapter
 import android.view.View
 import android.view.ViewGroup
+import androidx.viewpager.widget.PagerAdapter
 import com.shuhart.materialcalendarview.MaterialCalendarView.ShowOtherDates
 import com.shuhart.materialcalendarview.draw.DayDrawDataProvider
 import com.shuhart.materialcalendarview.draw.DayDrawDelegate
@@ -99,15 +99,13 @@ abstract class CalendarPagerAdapter<V : CalendarPagerView>(val mcv: MaterialCale
     protected abstract fun createRangeIndex(min: CalendarDay, max: CalendarDay): DateRangeIndex
 
     @Suppress("UNCHECKED_CAST")
-    override fun getItemPosition(`object`: Any?): Int {
+    override fun getItemPosition(`object`: Any): Int {
         if (!isInstanceOfView(`object`)) {
-            return PagerAdapter.POSITION_NONE
+            return POSITION_NONE
         }
-//        val pagerView = `object` as CalendarPagerView?
-//        pagerView!!.firstViewDay ?: return PagerAdapter.POSITION_NONE
         val index = indexOf(`object` as V)
         return if (index < 0) {
-            PagerAdapter.POSITION_NONE
+            POSITION_NONE
         } else index
     }
 

@@ -1,39 +1,19 @@
 ext {
     minSdkVersion = 14
-    compileSdkVersion = 26
-    targetSdkVersion = 26
-    buildToolsVersion = '26.0.2'
+    compileSdkVersion = 30
+    targetSdkVersion = 30
+    buildToolsVersion = '30.0.0'
+    // google libraries
+    androidXSupportV4 = '1.0.0'
+    androidXCoreUi = '1.0.0'
+    androidXRecyclerView = '1.1.0'
+    androidXAnnotations = '1.1.0'
+    androidxAppCompatVersion = '1.2.0'
+    materialComponentsVersion = '1.3.0'
 
-    hamcrestVersion = '1.3'
-    junitVersion = '4.11'
-    runnerVersion = '0.5'
-    supportVersion = '26.1.0'
-
-    supportV4 = "com.android.support:support-v4:$supportVersion"
-    supportDesign = "com.android.support:design:$supportVersion"
-    supportAnnotations = "com.android.support:support-annotations:$supportVersion"
-    supportAppCompat = "com.android.support:appcompat-v7:$supportVersion"
-    recyclerviewV7 = "com.android.support:recyclerview-v7:$supportVersion"
-
-    // Test
-    junit = "junit:junit:$junitVersion"
-    testRunner = "com.android.support.test:runner:$runnerVersion"
-    testRules = "com.android.support.test:rules:$runnerVersion"
-
-    // Hamcrest
-    hamcrestCore = "org.hamcrest:hamcrest-core:$hamcrestVersion"
-    hamcrestLibrary = "org.hamcrest:hamcrest-library:$hamcrestVersion"
-    hamcrestIntegration = "org.hamcrest:hamcrest-integration:$hamcrestVersion"
-
-    testDep = [junit,
-               hamcrestCore,
-               hamcrestLibrary,
-               hamcrestIntegration]
-
-    androidTestDep = [junit,
-                      testRunner,
-                      testRules,
-                      hamcrestCore,
-                      hamcrestLibrary,
-                      hamcrestIntegration]
+    supportV4 = "androidx.legacy:legacy-support-v4:$androidXSupportV4"
+    supportDesign = "com.google.android.material:material:$materialComponentsVersion"
+    supportAnnotations = "androidx.annotation:annotation:$androidXAnnotations"
+    supportAppCompat = "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    recyclerview = "androidx.recyclerview:recyclerview:$androidXRecyclerView"
 }

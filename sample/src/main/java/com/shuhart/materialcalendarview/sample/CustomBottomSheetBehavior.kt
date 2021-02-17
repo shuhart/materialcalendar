@@ -1,9 +1,9 @@
 package com.shuhart.materialcalendarview.sample
 
-import android.support.design.widget.BottomSheetBehavior
-import android.support.design.widget.CoordinatorLayout
-import android.support.v4.view.ViewCompat
 import android.view.View
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.ViewCompat
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 /**
  * Created by Bogdan Kornev

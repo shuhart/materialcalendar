@@ -2,7 +2,7 @@
 
 package com.shuhart.materialcalendarview
 
-import android.support.v4.util.SparseArrayCompat
+import androidx.collection.SparseArrayCompat
 
 /**
  * Pager adapter backing the calendar view

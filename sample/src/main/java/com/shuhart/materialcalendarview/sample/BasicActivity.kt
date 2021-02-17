@@ -1,8 +1,8 @@
 package com.shuhart.materialcalendarview.sample
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.shuhart.materialcalendarview.CalendarDay
 import com.shuhart.materialcalendarview.MaterialCalendarView
 import com.shuhart.materialcalendarview.OnDateSelectedListener

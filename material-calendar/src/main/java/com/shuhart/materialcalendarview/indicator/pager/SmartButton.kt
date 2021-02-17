@@ -8,10 +8,10 @@ import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RippleDrawable
 import android.graphics.drawable.StateListDrawable
 import android.os.Build
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.AppCompatTextView
 import android.util.AttributeSet
 import android.view.Gravity
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.ContextCompat
 import com.shuhart.materialcalendarview.R
 
 /**

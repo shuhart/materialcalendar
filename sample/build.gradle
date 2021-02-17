@@ -20,18 +20,20 @@ android {
     lintOptions {
         abortOnError false
     }
-    buildToolsVersion '26.0.2'
+    packagingOptions {
+        exclude 'androidsupportmultidexversion.txt'
+    }
 }
 
 dependencies {
     // You should use the commented out line below in you're application.
     // We depend on the source directly here so that development is easier.
-    compile project(':material-calendar')
+    implementation project(':material-calendar')
     //compile 'com.shuhart:material-calendarview:1.0'
 
-    compile rootProject.ext.supportAppCompat
-    compile rootProject.ext.recyclerviewV7
-    compile rootProject.ext.supportDesign
-    compile 'com.android.support:multidex:1.0.2'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation rootProject.ext.supportAppCompat
+    implementation rootProject.ext.recyclerview
+    implementation rootProject.ext.supportDesign
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

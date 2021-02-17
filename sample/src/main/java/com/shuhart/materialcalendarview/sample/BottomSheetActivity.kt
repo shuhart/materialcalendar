@@ -5,13 +5,13 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.support.design.widget.BottomSheetBehavior
-import android.support.design.widget.CoordinatorLayout
-import android.support.v7.app.AppCompatActivity
 import android.text.format.DateUtils
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.shuhart.materialcalendarview.*
 import com.shuhart.materialcalendarview.utils.CalendarUtils
 import com.shuhart.materialcalendarview.utils.DpUtils

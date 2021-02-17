@@ -6,8 +6,7 @@ apply plugin: 'com.jfrog.bintray'
 ext {
     bintrayRepo = 'MaterialCalendar'
     bintrayName = 'material-calendar'
-
-        publishedGroupId = 'com.shuhart'
+    publishedGroupId = 'com.shuhart'
     libraryName = 'material-calendar'
     artifact = 'material-calendar'
 
@@ -16,7 +15,7 @@ ext {
     siteUrl = 'https://github.com/shuhart/materialcalendar'
     gitUrl = 'https://github.com/shuhart/materialcalendar.git'
 
-    libraryVersion = '1.0.1'
+    libraryVersion = '1.1.0'
 
     developerId = 'shuhart'
     developerName = 'Redrick Shuhart'
@@ -42,17 +41,13 @@ android {
     lintOptions {
         abortOnError false
     }
-    buildToolsVersion '26.0.2'
 }
 
 dependencies {
-    compile rootProject.ext.supportV4
-    compile rootProject.ext.supportAppCompat
-    compile rootProject.ext.supportAnnotations
-
-    rootProject.ext.testDep.each { testCompile it }
-    rootProject.ext.androidTestDep.each { androidTestCompile it }
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation rootProject.ext.supportV4
+    implementation rootProject.ext.supportAppCompat
+    implementation rootProject.ext.supportAnnotations
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 tasks.withType(Javadoc) {
@@ -61,20 +56,20 @@ tasks.withType(Javadoc) {
     options.addStringOption('charSet', 'UTF-8')
 }
 
-android.libraryVariants.all { variant ->
-    task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
-        title "Material CalendarView ${version}"
-        description "Generates Javadoc for $variant.name."
-        source = variant.javaCompile.source
-        classpath = files(variant.javaCompile.classpath.files, project.android.getBootClasspath())
-        exclude '**/BuildConfig.java'
-        exclude '**/R.java'
-        options {
-            links "http://docs.oracle.com/javase/7/docs/api/"
-            linksOffline "http://d.android.com/reference", "${android.sdkDirectory}/docs/reference"
-        }
-    }
-}
+//android.libraryVariants.all { variant ->
+//    task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
+//        title "Material CalendarView ${version}"
+//        description "Generates Javadoc for $variant.name."
+//        source = variant.javaCompile.source
+//        classpath = files(variant.javaCompile.classpath.files, project.android.getBootClasspath())
+//        exclude '**/BuildConfig.java'
+//        exclude '**/R.java'
+//        options {
+//            links "http://docs.oracle.com/javase/7/docs/api/"
+//            linksOffline "http://d.android.com/reference", "${android.sdkDirectory}/docs/reference"
+//        }
+//    }
+//}
 
 group = publishedGroupId
 version = libraryVersion

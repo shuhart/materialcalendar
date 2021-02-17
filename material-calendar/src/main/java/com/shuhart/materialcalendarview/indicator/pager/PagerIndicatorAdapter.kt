@@ -2,12 +2,12 @@ package com.shuhart.materialcalendarview.indicator.pager
 
 import android.database.DataSetObserver
 import android.graphics.Color
-import android.support.v4.view.PagerAdapter
 import android.text.format.DateUtils
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.viewpager.widget.PagerAdapter
 import com.shuhart.materialcalendarview.CalendarDay
 import com.shuhart.materialcalendarview.CalendarPagerAdapter
 import com.shuhart.materialcalendarview.utils.DpUtils
@@ -86,19 +86,19 @@ class PagerIndicatorAdapter(private val pagerAdapter: CalendarPagerAdapter<*>) :
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun getItemPosition(`object`: Any?): Int {
+    override fun getItemPosition(`object`: Any): Int {
         if (`object` !is FrameLayout) {
-            return PagerAdapter.POSITION_NONE
+            return POSITION_NONE
         }
         val index = indexOf(`object`.getChildAt(0).tag as CalendarDay)
         return if (index < 0) {
-            PagerAdapter.POSITION_NONE
+            POSITION_NONE
         } else index
     }
 
     fun indexOf(month: CalendarDay): Int = pagerAdapter.getIndexForDay(month)
 
-    override fun isViewFromObject(view: View?, `object`: Any?): Boolean = view == `object`
+    override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object`
 
     override fun getCount(): Int = pagerAdapter.count
 

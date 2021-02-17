@@ -2,9 +2,9 @@ package com.shuhart.materialcalendarview.indicator.pager
 
 import android.content.Context
 import android.content.res.TypedArray
-import android.support.v4.view.ViewPager
 import android.util.Log
 import android.view.MotionEvent
+import androidx.viewpager.widget.ViewPager
 import com.shuhart.materialcalendarview.*
 import com.shuhart.materialcalendarview.utils.DpUtils
 

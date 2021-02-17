@@ -1,8 +1,8 @@
 package com.shuhart.materialcalendarview
 
 import android.content.Context
-import android.support.v4.view.ViewPager
 import android.view.MotionEvent
+import androidx.viewpager.widget.ViewPager
 
 /**
  * Custom ViewPager that allows swiping to be disabled.

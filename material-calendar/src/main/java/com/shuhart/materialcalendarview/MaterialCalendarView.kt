@@ -8,9 +8,6 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
-import android.support.annotation.ArrayRes
-import android.support.annotation.IntDef
-import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.util.SparseArray
 import android.util.TypedValue
@@ -19,6 +16,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
+import androidx.annotation.ArrayRes
+import androidx.annotation.IntDef
+import androidx.viewpager.widget.ViewPager
 import com.shuhart.materialcalendarview.draw.DayDrawDataProvider
 import com.shuhart.materialcalendarview.draw.DayDrawDelegate
 import com.shuhart.materialcalendarview.draw.DefaultDayDrawDataProvider
@@ -64,7 +64,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
      * @see .getSelectionMode
      */
     @Retention(AnnotationRetention.RUNTIME)
-    @IntDef(SELECTION_MODE_NONE.toLong(), SELECTION_MODE_SINGLE.toLong(), SELECTION_MODE_MULTIPLE.toLong(), SELECTION_MODE_RANGE.toLong())
+    @IntDef(SELECTION_MODE_NONE, SELECTION_MODE_SINGLE, SELECTION_MODE_MULTIPLE, SELECTION_MODE_RANGE)
     annotation class SelectionMode
 
     /**
@@ -75,7 +75,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
      */
     @SuppressLint("UniqueConstants")
     @Retention(AnnotationRetention.RUNTIME)
-    @IntDef(flag = true, value = *longArrayOf(SHOW_NONE.toLong(), SHOW_ALL.toLong(), SHOW_DEFAULTS.toLong(), SHOW_OUT_OF_RANGE.toLong(), SHOW_OTHER_MONTHS.toLong(), SHOW_DECORATED_DISABLED.toLong()))
+    @IntDef(flag = true, value = [SHOW_NONE, SHOW_ALL, SHOW_DEFAULTS, SHOW_OUT_OF_RANGE, SHOW_OTHER_MONTHS, SHOW_DECORATED_DISABLED])
     annotation class ShowOtherDates
 
 
@@ -825,7 +825,7 @@ open class MaterialCalendarView @JvmOverloads constructor(context: Context, attr
         var selectionRangeColor = 0
         var bottomTopDayPadding = 0
 
-        constructor(superState: Parcelable) : super(superState)
+        constructor(superState: Parcelable?) : super(superState)
 
         override fun writeToParcel(out: Parcel, flags: Int) {
             super.writeToParcel(out, flags)
