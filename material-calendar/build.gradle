@@ -4,6 +4,14 @@ apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
 ext {
+    PUBLISH_GROUP_ID = 'com.github.shuhart'
+    PUBLISH_VERSION = '1.1.0'
+    PUBLISH_ARTIFACT_ID = 'material-calendar'
+}
+
+apply from: "${rootProject.projectDir}/publish-mavencentral.gradle"
+
+ext {
     bintrayRepo = 'MaterialCalendar'
     bintrayName = 'material-calendar'
     publishedGroupId = 'com.shuhart'
@@ -55,21 +63,6 @@ tasks.withType(Javadoc) {
     options.addStringOption('encoding', 'UTF-8')
     options.addStringOption('charSet', 'UTF-8')
 }
-
-//android.libraryVariants.all { variant ->
-//    task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
-//        title "Material CalendarView ${version}"
-//        description "Generates Javadoc for $variant.name."
-//        source = variant.javaCompile.source
-//        classpath = files(variant.javaCompile.classpath.files, project.android.getBootClasspath())
-//        exclude '**/BuildConfig.java'
-//        exclude '**/R.java'
-//        options {
-//            links "http://docs.oracle.com/javase/7/docs/api/"
-//            linksOffline "http://d.android.com/reference", "${android.sdkDirectory}/docs/reference"
-//        }
-//    }
-//}
 
 group = publishedGroupId
 version = libraryVersion
