@@ -9,7 +9,7 @@ and feel, rather than 100% parity with the platform's implementation. The goal o
 Usage
 -----
 
-1. Add maven { url "https://dl.bintray.com/shuhart/MaterialCalendar" } into your root gradle file.
+1. Add mavenCentral() to repositories block in your root gradle file.
 1. Add `compile 'com.shuhart:material-calendar:1.1.0'` to your dependencies.
 2. Add `MaterialCalendarView` into your layouts or view hierarchy.
 3. Look into the sample for additional details on how to use and configure the library.
